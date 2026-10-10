@@ -22,11 +22,7 @@ public class MainMenu implements IMenu {
         System.out.println();
 
         do {
- /*           List<AlertResult> alerts = alertManager.evaluate(
-                    deviceService.findActiveByUserId(SessionContext.getUser().getId()));
-            long critical = alerts.stream().filter(a -> a.getSeverity() == AlertSeverity.CRITICAL).count();
-            if (!alerts.isEmpty())
-                System.out.printf("! %d critical · %d active alerts — see Alerts (option 5)%n", critical, alerts.size());*/
+            displayAlertHeader();
             printOptions();
             choice = InputHandler.getIntegerInput();
             switch (choice) {
@@ -55,6 +51,14 @@ public class MainMenu implements IMenu {
         System.out.println("============================================================================");
         System.out.println("     Welcome to the RackWatch Home Lab / Server Rack Manager Application! ");
         System.out.println("============================================================================");
+    }
+
+    private void displayAlertHeader() {
+         /* List<AlertResult> alerts = alertManager.evaluate(
+                    deviceService.findActiveByUserId(SessionContext.getUser().getId()));
+            long critical = alerts.stream().filter(a -> a.getSeverity() == AlertSeverity.CRITICAL).count();
+            if (!alerts.isEmpty())
+                System.out.printf("! %d critical · %d active alerts — see Alerts (option 5)%n", critical, alerts.size());*/
     }
 
 }
