@@ -18,6 +18,7 @@ public abstract class Device {
     @Id
     protected String id;
     protected String userId;
+    protected String rackId;
     protected String name;
     protected String manufacturer;
     protected String model;
@@ -45,12 +46,13 @@ public abstract class Device {
         //No argument constructor
     }
 
-    public Device(String userId, String name, String manufacturer, String model, String serialNumber, Integer startUnit,
+    public Device(String userId, String rackId, String name, String manufacturer, String model, String serialNumber, Integer startUnit,
                   Integer unitHeight, Integer powerWatts, DeviceStatus status, LocalDate purchaseDate, LocalDate warrantExpiry,
                   String firmwareVersion, LocalDate lastFirmwareUpdate, Integer firmwareIntervalOverrideDays, String licenseName,
                   LocalDate licenseExpiry, String notes, MaintenanceType scheduledMaintenanceType, Integer maintenanceIntervalDays,
                   LocalDate lastScheduledMaintenanceDate, BigDecimal purchasePrice, Integer expectedLifespanYears) {
         this.userId = userId;
+        this.rackId = rackId;
         this.name = name;
         this.manufacturer = manufacturer;
         this.model = model;
@@ -89,6 +91,14 @@ public abstract class Device {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getRackId() {
+        return rackId;
+    }
+
+    public void setRackId(String rackId) {
+        this.rackId = rackId;
     }
 
     public String getName() {

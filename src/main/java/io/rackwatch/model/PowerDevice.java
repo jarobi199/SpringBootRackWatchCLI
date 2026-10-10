@@ -17,11 +17,11 @@ public class PowerDevice extends Device {
 
     }
 
-    public PowerDevice(String userId, String name, String manufacturer, String model, String serialNumber, Integer startUnit, Integer unitHeight, Integer powerWatts, DeviceStatus status,
+    public PowerDevice(String userId, String rackId, String name, String manufacturer, String model, String serialNumber, Integer startUnit, Integer unitHeight, Integer powerWatts, DeviceStatus status,
                        LocalDate purchaseDate, LocalDate warrantExpiry, String firmwareVersion, LocalDate lastFirmwareUpdate, Integer firmwareIntervalOverrideDays, String licenseName,
                        LocalDate licenseExpiry, String notes, MaintenanceType scheduledMaintenanceType, Integer maintenanceIntervalDays, LocalDate lastScheduledMaintenanceDate,
                        BigDecimal purchasePrice, Integer expectedLifespanYears, PowerRole powerRole, int outletCount, int capacityWatts) {
-        super(userId, name, manufacturer, model, serialNumber, startUnit, unitHeight, powerWatts, status, purchaseDate, warrantExpiry, firmwareVersion, lastFirmwareUpdate, firmwareIntervalOverrideDays,
+        super(userId, rackId, name, manufacturer, model, serialNumber, startUnit, unitHeight, powerWatts, status, purchaseDate, warrantExpiry, firmwareVersion, lastFirmwareUpdate, firmwareIntervalOverrideDays,
                 licenseName, licenseExpiry, notes, scheduledMaintenanceType, maintenanceIntervalDays, lastScheduledMaintenanceDate, purchasePrice, expectedLifespanYears);
         this.powerRole = powerRole;
         this.outletCount = outletCount;

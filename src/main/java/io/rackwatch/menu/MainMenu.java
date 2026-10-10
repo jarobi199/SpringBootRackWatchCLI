@@ -1,5 +1,6 @@
 package io.rackwatch.menu;
 
+import io.rackwatch.alert.AlertManager;
 import io.rackwatch.interfaces.IMenu;
 import io.rackwatch.util.InputHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MainMenu implements IMenu {
-
+    @Autowired
+    private AlertManager alertManager;
+    @Autowired
+    private DeviceMenu deviceMenu;
     @Autowired
     private AuthenticateMenu authenticateMenu;
     @Autowired
@@ -31,7 +35,7 @@ public class MainMenu implements IMenu {
             choice = InputHandler.getIntegerInput();
             menu = switch (choice) {
                 //case 1 -> rackMenu.show();
-                //case 2 -> deviceMenu.show();
+                case 2 -> deviceMenu;
                 //case 3 -> maintenanceMenu.show();
                 //case 4 -> reportMenu.show();
                 //case 5 -> alertMenu.show();
@@ -62,11 +66,12 @@ public class MainMenu implements IMenu {
     }
 
     private void displayAlertHeader() {
-         /* List<AlertResult> alerts = alertManager.evaluate(
-                    deviceService.findActiveByUserId(SessionContext.getUser().getId()));
-            long critical = alerts.stream().filter(a -> a.getSeverity() == AlertSeverity.CRITICAL).count();
-            if (!alerts.isEmpty())
-                System.out.printf("! %d critical · %d active alerts — see Alerts (option 5)%n", critical, alerts.size());*/
+        /*List<AlertResult> alerts = alertManager.evaluate(
+                deviceService.findActiveByUserId(SessionContext.getUser().getId()));
+        long critical = alerts.stream().filter(a -> a.getSeverity() == AlertSeverity.CRITICAL).count();
+        if (!alerts.isEmpty()) {
+            System.out.printf("! %d critical · %d active alerts — see Alerts (option 5)%n", critical, alerts.size());
+        }*/
     }
 
 }

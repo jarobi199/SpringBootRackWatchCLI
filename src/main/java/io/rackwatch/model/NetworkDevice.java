@@ -18,11 +18,11 @@ public class NetworkDevice extends Device {
 
     }
 
-    public NetworkDevice(String userId, String name, String manufacturer, String model, String serialNumber, Integer startUnit, Integer unitHeight, Integer powerWatts, DeviceStatus status,
+    public NetworkDevice(String userId, String rackId, String name, String manufacturer, String model, String serialNumber, Integer startUnit, Integer unitHeight, Integer powerWatts, DeviceStatus status,
                          LocalDate purchaseDate, LocalDate warrantExpiry, String firmwareVersion, LocalDate lastFirmwareUpdate, Integer firmwareIntervalOverrideDays, String licenseName,
                          LocalDate licenseExpiry, String notes, MaintenanceType scheduledMaintenanceType, Integer maintenanceIntervalDays, LocalDate lastScheduledMaintenanceDate,
                          BigDecimal purchasePrice, Integer expectedLifespanYears, NetworkRole networkRole, int portCount, int maxSpeedGbps, boolean isManaged) {
-        super(userId, name, manufacturer, model, serialNumber, startUnit, unitHeight, powerWatts, status, purchaseDate, warrantExpiry, firmwareVersion, lastFirmwareUpdate,
+        super(userId, rackId, name, manufacturer, model, serialNumber, startUnit, unitHeight, powerWatts, status, purchaseDate, warrantExpiry, firmwareVersion, lastFirmwareUpdate,
                 firmwareIntervalOverrideDays, licenseName, licenseExpiry, notes, scheduledMaintenanceType, maintenanceIntervalDays,
                 lastScheduledMaintenanceDate, purchasePrice, expectedLifespanYears);
         this.networkRole = networkRole;
