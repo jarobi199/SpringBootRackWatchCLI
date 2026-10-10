@@ -10,6 +10,10 @@ public class MainMenu implements IMenu {
 
     @Autowired
     private AuthenticateMenu authenticateMenu;
+    @Autowired
+    private SettingsMenu settingsMenu;
+    @Autowired
+    private GoodbyeMenu goodbyeMenu;
 
     @Override
     public void show() {
@@ -25,15 +29,19 @@ public class MainMenu implements IMenu {
             displayAlertHeader();
             printOptions();
             choice = InputHandler.getIntegerInput();
-            switch (choice) {
+            menu = switch (choice) {
                 //case 1 -> rackMenu.show();
                 //case 2 -> deviceMenu.show();
                 //case 3 -> maintenanceMenu.show();
                 //case 4 -> reportMenu.show();
                 //case 5 -> alertMenu.show();
-                //case 6 -> settingsMenu.show();
-            }
-        } while (choice != 0);
+                case 6 -> settingsMenu;
+                case 0 -> goodbyeMenu;
+                default -> throw new IllegalStateException("Unexpected value: " + choice);
+            };
+            menu.show();
+        }
+        while (choice != 0);
     }
 
     public void printOptions() {
