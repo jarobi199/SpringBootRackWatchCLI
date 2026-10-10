@@ -16,30 +16,30 @@ import java.util.List;
 @Document(collection = "devices")
 public abstract class Device {
     @Id
-    private String id;
-    private String userId;
-    private String name;
-    private String manufacturer;
-    private String model;
-    private String serialNumber;
-    private Integer startUnit;
-    private Integer unitHeight;
-    private Integer powerWatts;
-    private DeviceStatus status;
-    private LocalDate purchaseDate;
-    private LocalDate warrantExpiry;
-    private String firmwareVersion;
-    private LocalDate lastFirmwareUpdate;
-    private Integer firmwareIntervalOverrideDays;
-    private String licenseName;
-    private LocalDate licenseExpiry;
-    private String notes;
-    private List<String> tags;
-    private MaintenanceType scheduledMaintenanceType;
-    private Integer maintenanceIntervalDays;
-    private LocalDate lastScheduledMaintenanceDate;
-    private BigDecimal purchasePrice;
-    private Integer expectedLifespanYears;
+    protected String id;
+    protected String userId;
+    protected String name;
+    protected String manufacturer;
+    protected String model;
+    protected String serialNumber;
+    protected Integer startUnit;
+    protected Integer unitHeight;
+    protected Integer powerWatts;
+    protected DeviceStatus status;
+    protected LocalDate purchaseDate;
+    protected LocalDate warrantExpiry;
+    protected String firmwareVersion;
+    protected LocalDate lastFirmwareUpdate;
+    protected Integer firmwareIntervalOverrideDays;
+    protected String licenseName;
+    protected LocalDate licenseExpiry;
+    protected String notes;
+    protected List<String> tags;
+    protected MaintenanceType scheduledMaintenanceType;
+    protected Integer maintenanceIntervalDays;
+    protected LocalDate lastScheduledMaintenanceDate;
+    protected BigDecimal purchasePrice;
+    protected Integer expectedLifespanYears;
 
     public Device() {
         //No argument constructor
