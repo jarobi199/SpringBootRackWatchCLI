@@ -1,0 +1,6 @@
+package io.rackwatch.enums;
+
+public enum MaintenanceType {
+    FIRMWARE_UPDATE, HARDWARE_REPAIR, PART_REPLACEMENT, CLEANING,
+    CONFIG_CHANGE, LICENSE_RENEWAL, WARRANTY_EXTENSION
+}

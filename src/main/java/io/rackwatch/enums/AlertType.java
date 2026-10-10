@@ -1,0 +1,6 @@
+package io.rackwatch.enums;
+
+public enum AlertType {
+    WARRANTY_EXPIRY, FIRMWARE_OVERDUE, LICENSE_RENEWAL, MAINTENANCE_DUE,
+    POWER_BUDGET , REPLACEMENT_DUE
+}
