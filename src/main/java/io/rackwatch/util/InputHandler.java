@@ -80,6 +80,25 @@ public class InputHandler {
         return nextLine();
     }
 
+    public static Integer getIntegerInputNullable() {
+        String line = nextLine();
+        if (line.isEmpty()) {
+            return null;
+        }
+        else
+        {
+            while (true) {
+                try
+                {
+                    return Integer.parseInt(line);
+                }
+                catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a whole number:");
+                }
+            }
+        }
+    }
+
     public static int getIntegerInput() {
         while (true) {
             String line = nextLine();
