@@ -1,6 +1,8 @@
 package io.rackwatch.menu;
 
+import io.rackwatch.enums.ComputeRole;
 import io.rackwatch.enums.DeviceStatus;
+import io.rackwatch.enums.DeviceType;
 import io.rackwatch.enums.MaintenanceType;
 import io.rackwatch.interfaces.IMenu;
 import io.rackwatch.model.Rack;
@@ -49,6 +51,8 @@ public class DeviceMenu implements IMenu {
             }
             while (!deviceService.validatePlacement(startUnit, deviceHeight, rack));
 
+            System.out.println("Please enter the device type (COMPUTE, NETWORK, POWER):");
+            DeviceType deviceType = DeviceType.valueOf(InputHandler.getStringInput().toUpperCase());
             System.out.println("Please enter the device name:");
             String name = InputHandler.getStringInput();
             System.out.println("Please enter the device manufacturer:");
@@ -91,6 +95,19 @@ public class DeviceMenu implements IMenu {
             System.out.println("Please enter the expected lifespan in years of the device (optional):");
             Integer expectedLifespanYears = InputHandler.getIntegerInputNullable();
 
+            switch (deviceType) {
+                case COMPUTE:
+                    System.out.println("Please enter the compute role (HYPERVISOR, NAS, GENERAL_SERVER):");
+                    ComputeRole computeRole = ComputeRole.valueOf(InputHandler.getStringInput().toUpperCase());
+                    System.out.println("Please enter the number of CPU cores");
+                    int cpuCores = InputHandler.getIntegerInput();
+                    System.out.println("Please enter the RAM in GB");
+                    int ram = InputHandler.getIntegerInput();
+                    System.out.println("Please enter the storage in TB");
+                    int storage = InputHandler.getIntegerInput();
+
+                    //deviceService.addComputeDevice();
+            }
 
         }
 
