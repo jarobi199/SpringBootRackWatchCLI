@@ -76,20 +76,23 @@ public class InputHandler {
     // Public API — mirrors the original interface exactly
     // ----------------------------------------------------------------
 
+    public static String getStringInputNullable() {
+        return (nextLine().isEmpty()) ? null : nextLine();
+    }
+
     public static String getStringInput() {
         return nextLine();
     }
 
     public static Integer getIntegerInputNullable() {
-        String line = nextLine();
-        if (line.isEmpty()) {
-            return null;
-        }
-        else
-        {
-            while (true) {
-                try
-                {
+        while (true) {
+            String line = nextLine();
+            if (line.isEmpty()) {
+                return null;
+            }
+            else
+            {
+                try {
                     return Integer.parseInt(line);
                 }
                 catch (NumberFormatException e) {
@@ -117,6 +120,22 @@ public class InputHandler {
                 return Double.parseDouble(line);
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number:");
+            }
+        }
+    }
+
+    public static LocalDate getDateInputNullable() {
+        while (true) {
+            String line = nextLine();
+            if (line.isEmpty()) {
+                return null;
+            }
+            else {
+                try {
+                    return LocalDate.parse(line);
+                } catch (Exception e) {
+                    System.out.println("Invalid date. Please use format yyyy-MM-dd:");
+                }
             }
         }
     }

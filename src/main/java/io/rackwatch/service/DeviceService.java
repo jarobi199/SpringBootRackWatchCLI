@@ -3,6 +3,9 @@ package io.rackwatch.service;
 import io.github.kusoroadeolu.clique.Clique;
 import io.github.kusoroadeolu.clique.components.Table;
 import io.github.kusoroadeolu.clique.configuration.TableType;
+import io.rackwatch.authentication.SessionContext;
+import io.rackwatch.enums.DeviceStatus;
+import io.rackwatch.enums.DeviceType;
 import io.rackwatch.model.Device;
 import io.rackwatch.model.Rack;
 import io.rackwatch.repository.DeviceRepository;
@@ -19,8 +22,29 @@ public class DeviceService {
     @Autowired
     private RackRepository rackRepository;
 
+    public boolean areDevicesAvailable() {
+        return deviceRepository.count() > 0;
+    }
+
     public void filterAndList(int choice, String value) {
-        List<Device> devices;
+        List<Device> devices = deviceRepository.findByUserId(SessionContext.getUser().getId());
+        List<Device> filteredDevices = switch (choice) {
+            case 2 -> devices.stream()
+                    .filter(d -> d.getRackId().equalsIgnoreCase(value))
+                    .toList();
+            case 3 -> devices.stream()
+                    .filter(d -> d.getDeviceType().equals(DeviceType.valueOf(value)))
+                    .toList();
+            case 4 -> devices.stream()
+                    .filter(d -> d.getTags().stream().anyMatch(tag -> tag.equals(value)))
+                    .toList();
+            case 5 -> devices.stream()
+                    .filter(d -> d.getStatus().equals(DeviceStatus.valueOf(value)))
+                    .toList();
+            default -> devices;
+        };
+
+        displayDevices(filteredDevices);
     }
 
     public void displayDevices(List<Device> devices) {

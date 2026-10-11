@@ -1,6 +1,7 @@
 package io.rackwatch.menu;
 
 import io.rackwatch.interfaces.IMenu;
+import io.rackwatch.model.Rack;
 import io.rackwatch.service.DeviceService;
 import io.rackwatch.util.InputHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeviceMenu implements IMenu {
 
+    @Autowired
+    private RackMenu rackMenu;
     @Autowired
     private DeviceService deviceService;
 
@@ -27,17 +30,44 @@ public class DeviceMenu implements IMenu {
     }
 
     public void listFilterDevices() {
-        String value = null;
-        System.out.println("Please enter what you would want to filter on:");
-        System.out.println("[1] No filter");
-        System.out.println("[2] Rack");
-        System.out.println("[3] Type");
-        System.out.println("[4] Tag");
-        System.out.println("[5] Status");
-        System.out.println("[0] Back");
-        int choice = InputHandler.getIntegerInput();
+        if(deviceService.areDevicesAvailable()) {
+            String value = null;
+            System.out.println("Please enter what you would want to filter on:");
+            System.out.println("[1] No filter");
+            System.out.println("[2] Rack");
+            System.out.println("[3] Type");
+            System.out.println("[4] Tag");
+            System.out.println("[5] Status");
+            System.out.println("[0] Back");
+            int choice = InputHandler.getIntegerInput();
 
-        deviceService.filterAndList(choice, value);
+            switch (choice) {
+                case 2 -> {
+                    Rack rack = rackMenu.listAllRacksAndSelect();
+                    if (rack != null) {
+                        value = rack.getId();
+                    }
+                }
+                case 3 -> {
+                    System.out.println("Please enter the device type to filter (COMPUTE, NETWORK, POWER):");
+                    value = InputHandler.getStringInput();
+                }
+                case 4 -> {
+                    System.out.println("Please enter the name of the tag to filer on:");
+                    value = InputHandler.getStringInput();
+                }
+                case 5 -> {
+                    System.out.println("Please enter the device status to filer (ACTIVE, DECOMMISSIONED):");
+                    value = InputHandler.getStringInput();
+                }
+            }
+
+            deviceService.filterAndList(choice, value);
+        }
+        else
+        {
+            System.out.println("There are no devices available.");
+        }
     }
 
     public void printOptions() {
