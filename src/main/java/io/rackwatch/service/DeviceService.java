@@ -73,11 +73,13 @@ public class DeviceService {
         boolean valid = true;
         List<Device> devices = deviceRepository.findByRackId(rack.getId()).stream().filter(d -> DeviceStatus.ACTIVE.equals(d.getStatus())).toList();
         for(Device device : devices) {
-            if ((startUnit >= device.getStartUnit()) || (startUnit + deviceHeight - 1) <= (device.getStartUnit() + device.getUnitHeight() - 1)) {
+            if ((startUnit < 1) || ((startUnit + deviceHeight - 1) > rack.getTotalUnits()) || (startUnit >= device.getStartUnit()) || (startUnit + deviceHeight - 1) <= (device.getStartUnit() + device.getUnitHeight() - 1)) {
                 valid = false;
                 break;
             }
         }
+
         return valid;
+
     }
 }
