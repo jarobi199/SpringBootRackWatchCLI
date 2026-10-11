@@ -51,15 +51,15 @@ public class DeviceService {
         System.out.println("| LIST OF DEVICES |");
         Table deviceTable = Clique.table(TableType.BOX_DRAW)
                 .headers(
-                        "[yellow, bold]NAME[/]",
-                        "[yellow, bold]RACK[/]",
-                        "[yellow, bold]TYPE[/]",
-                        "[yellow, bold]MANUFACTURER[/]",
-                        "[yellow, bold]MODEL[/]",
-                        "[yellow, bold]UNITS[/]",
-                        "[yellow, bold]POWER WATTS[/]",
-                        "[yellow, bold]PURCHASE DATE[/]",
-                        "[yellow, bold]STATUS[/]"
+                        "[*blue, bold]NAME[/]",
+                        "[*blue, bold]RACK[/]",
+                        "[*blue, bold]TYPE[/]",
+                        "[*blue, bold]MANUFACTURER[/]",
+                        "[*blue, bold]MODEL[/]",
+                        "[*blue, bold]UNITS[/]",
+                        "[*blue, bold]POWER WATTS[/]",
+                        "[*blue, bold]PURCHASE DATE[/]",
+                        "[*blue, bold]STATUS[/]"
                 );
         for (Device device : devices) {
             Rack rack = rackRepository.findById(device.getRackId()).orElse(null);

@@ -4,7 +4,6 @@ import io.github.kusoroadeolu.clique.Clique;
 import io.github.kusoroadeolu.clique.components.Table;
 import io.github.kusoroadeolu.clique.configuration.TableType;
 import io.rackwatch.model.Device;
-import io.rackwatch.model.PowerDevice;
 
 import java.util.List;
 
@@ -19,8 +18,8 @@ public class RackDiagramUtil {
         System.out.println("| RACK ELEVATION |");
         Table rackElevationTable = Clique.table(TableType.BOX_DRAW)
                 .headers(
-                        "[yellow, bold]UNIT[/]",
-                        "[yellow, bold]RACK[/]"
+                        "[*blue, bold]UNIT[/]",
+                        "[*blue, bold]RACK[/]"
                 );
 
         for(int unitCount = MAX_RACK_SIZE; unitCount >= 1; unitCount--) {
@@ -39,14 +38,6 @@ public class RackDiagramUtil {
         }
 
         rackElevationTable.render();
-    }
-
-    public static void main(String[] args) {
-        Device device = new PowerDevice();
-        device.setName("Power Device");
-        device.setStartUnit(5);
-        device.setUnitHeight(4);
-        RackDiagramUtil.render(List.of(device));
     }
 
 }

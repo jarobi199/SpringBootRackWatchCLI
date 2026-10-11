@@ -24,11 +24,19 @@ public class RackMenu implements IMenu {
             switch (choice) {
                 case 1 -> listAllRacks();
                 case 2 -> addRack();
-                case 3 -> editRack();
-                case 4 -> deleteRack();
+                case 3 -> viewRackElevation();
+                case 4 -> editRack();
+                case 5 -> deleteRack();
             }
         }
         while (choice != 0);
+    }
+
+    public void viewRackElevation() {
+        Rack rack = listAllRacksAndSelect();
+        if (rack != null) {
+            rackService.viewRackElevation(rack);
+        }
     }
 
     public void deleteRack() {
@@ -82,8 +90,8 @@ public class RackMenu implements IMenu {
         System.out.println("[1] List all racks");
         System.out.println("[2] Add rack");
         System.out.println("[3] View rack elevation");
-        System.out.println("[4]  Edit rack");
-        System.out.println("[5]  Delete rack");
+        System.out.println("[4] Edit rack");
+        System.out.println("[5] Delete rack");
         System.out.println("[0] Exit");
         System.out.println("Please make a selection:");
     }

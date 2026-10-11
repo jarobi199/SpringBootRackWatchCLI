@@ -11,6 +11,8 @@ public class MainMenu implements IMenu {
     @Autowired
     private AlertManager alertManager;
     @Autowired
+    private RackMenu rackMenu;
+    @Autowired
     private DeviceMenu deviceMenu;
     @Autowired
     private AuthenticateMenu authenticateMenu;
@@ -34,7 +36,7 @@ public class MainMenu implements IMenu {
             printOptions();
             choice = InputHandler.getIntegerInput();
             menu = switch (choice) {
-                //case 1 -> rackMenu.show();
+                case 1 -> rackMenu;
                 case 2 -> deviceMenu;
                 //case 3 -> maintenanceMenu.show();
                 //case 4 -> reportMenu.show();
