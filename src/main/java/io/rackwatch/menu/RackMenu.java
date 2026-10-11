@@ -22,10 +22,59 @@ public class RackMenu implements IMenu {
             printOptions();
             choice = InputHandler.getIntegerInput();
             switch (choice) {
-
+                case 1 -> listAllRacks();
+                case 2 -> addRack();
+                case 3 -> editRack();
+                case 4 -> deleteRack();
             }
         }
         while (choice != 0);
+    }
+
+    public void deleteRack() {
+        Rack rack = listAllRacksAndSelect();
+        if (rack != null) {
+            if(rackService.hasDependencies(rack)) {
+                System.out.println("This rack has dependencies and could not be deleted.");
+            }
+            else
+            {
+                rackService.deleteRack(rack);
+            }
+        }
+    }
+
+    public void editRack() {
+        Rack rack = listAllRacksAndSelect();
+        if (rack != null) {
+            System.out.println("Enter the new rack name:");
+            String rackName = InputHandler.getStringInput();
+            System.out.println("Enter the new rack location:");
+            String rackLocation = InputHandler.getStringInput();
+            System.out.println("Enter the rack max power:");
+            int rackMaxPowerWatts = InputHandler.getIntegerInput();
+
+            rackService.editRack(rack, rackName, rackLocation, rackMaxPowerWatts);
+            System.out.println("The rack edited successfully");
+        }
+    }
+
+    public void addRack() {
+        System.out.println("Enter the rack name:");
+        String rackName = InputHandler.getStringInput();
+        System.out.println("Enter the rack location:");
+        String rackLocation = InputHandler.getStringInput();
+        System.out.println("Enter the total units of the rack:");
+        int rackTotalUnits = InputHandler.getIntegerInput();
+        System.out.println("Enter the rack max power:");
+        int rackMaxPowerWatts = InputHandler.getIntegerInput();
+
+        rackService.addRack(rackName, rackLocation, rackTotalUnits, rackMaxPowerWatts);
+        System.out.println("The rack added successfully!");
+    }
+
+    public void listAllRacks() {
+        rackService.listAllRacks();
     }
 
     public void printOptions() {
