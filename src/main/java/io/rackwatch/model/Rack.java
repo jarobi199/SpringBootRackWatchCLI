@@ -13,6 +13,8 @@ public class Rack {
     private int totalUnits;
     private int maxPowerWatts ;
 
+    public static final int MAX_RACK_SIZE = 60;
+
     public Rack() {
         //No argument constructor
     }

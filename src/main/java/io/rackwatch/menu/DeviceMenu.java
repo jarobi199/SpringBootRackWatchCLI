@@ -1,5 +1,7 @@
 package io.rackwatch.menu;
 
+import io.rackwatch.enums.DeviceStatus;
+import io.rackwatch.enums.MaintenanceType;
 import io.rackwatch.interfaces.IMenu;
 import io.rackwatch.model.Rack;
 import io.rackwatch.service.DeviceService;
@@ -7,6 +9,8 @@ import io.rackwatch.util.InputHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Component
 public class DeviceMenu implements IMenu {
@@ -24,9 +28,72 @@ public class DeviceMenu implements IMenu {
             choice = InputHandler.getIntegerInput();
             switch (choice) {
                 case 1 -> listFilterDevices();
+                case 3 -> addDevice();
             }
         }
         while (choice != 0);
+    }
+
+    public void addDevice() {
+        Rack rack = rackMenu.listAllRacksAndSelect();
+        if (rack != null) {
+            int startUnit;
+            int deviceHeight;
+
+            do
+            {
+                System.out.println("Please enter the start unit:");
+                startUnit = InputHandler.getIntegerInput();
+                System.out.println("Please enter the device unit height:");
+                deviceHeight = InputHandler.getIntegerInput();
+            }
+            while (!deviceService.validatePlacement(startUnit, deviceHeight, rack));
+
+            System.out.println("Please enter the device name:");
+            String name = InputHandler.getStringInput();
+            System.out.println("Please enter the device manufacturer:");
+            String manufacturer = InputHandler.getStringInput();
+            System.out.println("Please enter the device model:");
+            String model = InputHandler.getStringInput();
+            System.out.println("Please enter the device serial number (optional):");
+            String serial = InputHandler.getStringInputNullable();
+            System.out.println("Please enter the device power watts:");
+            String powerWatts = InputHandler.getStringInput();
+            System.out.println("Please enter the status of the device (ACTIVE, DECOMMISSIONED):");
+            DeviceStatus status = DeviceStatus.valueOf(InputHandler.getStringInput().toUpperCase());
+            System.out.println("Please enter the purchase date of the device (YYYY-MM-DD):");
+            LocalDate purchaseDate = InputHandler.getDateInput();
+            System.out.println("Please enter the warranty expiry date of the device (optional) (YYYY-MM-DD):");
+            LocalDate warrantyExpiryDate = InputHandler.getDateInputNullable();
+            System.out.println("Please enter the firmware version of the device:");
+            String firmwareVersion = InputHandler.getStringInput();
+            System.out.println("Please enter the last firmware update of the device (optional) (YYYY-MM-DD):");
+            LocalDate lastFirmwareUpdate = InputHandler.getDateInputNullable();
+            System.out.println("Please enter the license name of the device (optional):");
+            String licenseName = InputHandler.getStringInputNullable();
+            System.out.println("Please enter the license expiry date of the device (optional) (YYYY-MM-DD):");
+            LocalDate licenseExpiry = InputHandler.getDateInputNullable();
+            System.out.println("Please enter the notes:");
+            String notes = InputHandler.getStringInput();
+            System.out.println("Please enter any comma separated tags (optional):");
+            String tags = InputHandler.getStringInputNullable();
+            System.out.println("Please enter the scheduled maintenance type (optional) (FIRMWARE_UPDATE, HARDWARE_REPAIR, PART_REPLACEMENT, CLEANING,\n" +
+                    "    CONFIG_CHANGE, LICENSE_RENEWAL, WARRANTY_EXTENSION):");
+            String scheduledMaintenanceTypeInput = InputHandler.getStringInputNullable();
+            MaintenanceType scheduledMaintenanceType = (scheduledMaintenanceTypeInput != null) ? MaintenanceType.valueOf(scheduledMaintenanceTypeInput.toUpperCase()) : null;
+            System.out.println("Please enter the maintenance interval days of the device (optional):");
+            Integer maintenanceIntervalDays = InputHandler.getIntegerInputNullable();
+            System.out.println("Please enter the last scheduled maintenance date of the device (optional) (YYYY-MM-DD):");
+            LocalDate lastScheduledMaintenanceDate = InputHandler.getDateInputNullable();
+            System.out.println("Please enter the purchase price of the device (optional):");
+            String purchasePriceInput = InputHandler.getStringInputNullable();
+            BigDecimal purchasePrice = (purchasePriceInput != null) ? BigDecimal.valueOf(Long.parseLong(purchasePriceInput)) : null;
+            System.out.println("Please enter the expected lifespan in years of the device (optional):");
+            Integer expectedLifespanYears = InputHandler.getIntegerInputNullable();
+
+
+        }
+
     }
 
     public void listFilterDevices() {

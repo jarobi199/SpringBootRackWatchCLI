@@ -45,9 +45,15 @@ public class RackService {
         }
     }
 
-    public void addRack(String rackName, String rackLocation, int rackTotalUnits, int rackMaxPowerWatts) {
+    public boolean addRack(String rackName, String rackLocation, int rackTotalUnits, int rackMaxPowerWatts) {
+        boolean result = false;
         Rack rack = new Rack(SessionContext.getUser().getId(), rackName, rackLocation, rackTotalUnits, rackMaxPowerWatts);
-        rackRepository.save(rack);
+        if(validateRack(rack)) {
+            rackRepository.save(rack);
+            result = true;
+        }
+
+        return result;
     }
 
     public void editRack(Rack rack, String rackName, String rackLocation, int rackMaxPowerWatts) {
@@ -68,5 +74,9 @@ public class RackService {
     public void viewRackElevation(Rack rack) {
         List<Device> devices = deviceRepository.findByRackId(rack.getId());
         RackDiagramUtil.render(devices);
+    }
+
+    private boolean validateRack(Rack rack) {
+        return (rack.getTotalUnits() >= 1) && (rack.getTotalUnits() <= Rack.MAX_RACK_SIZE) && (rack.getMaxPowerWatts() > 0);
     }
 }

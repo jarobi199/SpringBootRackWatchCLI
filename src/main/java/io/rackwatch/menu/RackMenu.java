@@ -77,8 +77,15 @@ public class RackMenu implements IMenu {
         System.out.println("Enter the rack max power:");
         int rackMaxPowerWatts = InputHandler.getIntegerInput();
 
-        rackService.addRack(rackName, rackLocation, rackTotalUnits, rackMaxPowerWatts);
-        System.out.println("The rack added successfully!");
+        boolean addResult = rackService.addRack(rackName, rackLocation, rackTotalUnits, rackMaxPowerWatts);
+        if (addResult) {
+            System.out.println("The rack added successfully!");
+        }
+        else
+        {
+            System.out.println("The rack could not be added. Check your rack variables.");
+        }
+
     }
 
     public void listAllRacks() {
