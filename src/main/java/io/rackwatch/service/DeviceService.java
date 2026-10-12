@@ -5,10 +5,7 @@ import io.github.kusoroadeolu.clique.components.Table;
 import io.github.kusoroadeolu.clique.configuration.TableType;
 import io.rackwatch.authentication.SessionContext;
 import io.rackwatch.enums.*;
-import io.rackwatch.model.ComputeDevice;
-import io.rackwatch.model.Device;
-import io.rackwatch.model.NetworkDevice;
-import io.rackwatch.model.Rack;
+import io.rackwatch.model.*;
 import io.rackwatch.repository.DeviceRepository;
 import io.rackwatch.repository.RackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,8 +79,10 @@ public class DeviceService {
        else
        {
            List<Device> devices = deviceRepository.findByRackId(rack.getId()).stream().filter(d -> DeviceStatus.ACTIVE.equals(d.getStatus())).toList();
-           for(Device device : devices) {
-               if ((startUnit >= device.getStartUnit()) || (startUnit + deviceHeight - 1) <= (device.getStartUnit() + device.getUnitHeight() - 1)) {
+           int newEnd = startUnit + deviceHeight - 1;
+           for (Device device : devices) {
+               int existingEnd = device.getStartUnit() + device.getUnitHeight() - 1;
+               if (startUnit <= existingEnd && newEnd >= device.getStartUnit()) {
                    System.out.println("A device is already in this rack location.");
                    valid = false;
                    break;
@@ -122,6 +121,21 @@ public class DeviceService {
                     scheduledMaintenanceType, maintenanceIntervalDays, lastScheduledMaintenanceDate, purchasePrice, expectedLifespanYears, networkRole, portCount, maxSpeed, isManaged);
             deviceRepository.save(networkDevice);
             System.out.println("Added network device successfully!");
+        }
+    }
+
+    public void addPowerDevice(Rack rack, String name, String manufacturer, String model, String serial, int startUnit, int deviceHeight, int powerWatts,
+                               DeviceStatus status, LocalDate purchaseDate, LocalDate warrantyExpiryDate, String firmwareVersion, LocalDate lastFirmwareUpdate,
+                               String licenseName, LocalDate licenseExpiry, String notes, String tags, MaintenanceType scheduledMaintenanceType, Integer maintenanceIntervalDays,
+                               LocalDate lastScheduledMaintenanceDate, BigDecimal purchasePrice, Integer expectedLifespanYears, PowerRole powerRole, int outletCount, int capacityWatts) {
+        List<String> tagList = (tags != null) ? List.of(tags.split(",")) : new ArrayList<>();
+
+        if(validateDevice(deviceHeight, powerWatts, purchaseDate, name, serial, tagList, expectedLifespanYears)){
+            PowerDevice powerDevice = new PowerDevice(SessionContext.getUser().getId(), rack.getId(), name, manufacturer, model, serial, startUnit, deviceHeight, powerWatts,
+                    status, purchaseDate, warrantyExpiryDate, firmwareVersion, lastFirmwareUpdate, null, licenseName, licenseExpiry, notes, tagList,
+                    scheduledMaintenanceType, maintenanceIntervalDays, lastScheduledMaintenanceDate, purchasePrice, expectedLifespanYears, powerRole, outletCount, capacityWatts);
+            deviceRepository.save(powerDevice);
+            System.out.println("Added power device successfully!");
         }
     }
 

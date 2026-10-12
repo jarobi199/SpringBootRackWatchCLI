@@ -121,6 +121,18 @@ public class DeviceMenu implements IMenu {
                              firmwareVersion, lastFirmwareUpdate, licenseName, licenseExpiry, notes, tags, scheduledMaintenanceType, maintenanceIntervalDays,
                              lastScheduledMaintenanceDate, purchasePrice, expectedLifespanYears, networkRole, portCount, maxSpeed, isManaged);
                  }
+                case POWER -> {
+                    System.out.println("Please enter the power role (PDU, UPS):");
+                    PowerRole powerRole = PowerRole.valueOf(InputHandler.getStringInput().toUpperCase());
+                    System.out.println("Please enter the outlet count:");
+                    int outletCount = InputHandler.getIntegerInput();
+                    System.out.println("Please enter the capacity in watts:");
+                    int capacityWatts = InputHandler.getIntegerInput();
+
+                    deviceService.addPowerDevice(rack, name, manufacturer, model, serial, startUnit, deviceHeight, powerWatts, status, purchaseDate, warrantyExpiryDate,
+                            firmwareVersion, lastFirmwareUpdate, licenseName, licenseExpiry, notes, tags, scheduledMaintenanceType, maintenanceIntervalDays,
+                            lastScheduledMaintenanceDate, purchasePrice, expectedLifespanYears, powerRole, outletCount, capacityWatts);
+                }
             }
         }
     }
