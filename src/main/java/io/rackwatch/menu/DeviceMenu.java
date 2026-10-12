@@ -62,7 +62,7 @@ public class DeviceMenu implements IMenu {
             System.out.println("Please enter the device serial number (optional):");
             String serial = InputHandler.getStringInputNullable();
             System.out.println("Please enter the device power watts:");
-            String powerWatts = InputHandler.getStringInput();
+            int powerWatts = InputHandler.getIntegerInput();
             System.out.println("Please enter the status of the device (ACTIVE, DECOMMISSIONED):");
             DeviceStatus status = DeviceStatus.valueOf(InputHandler.getStringInput().toUpperCase());
             System.out.println("Please enter the purchase date of the device (YYYY-MM-DD):");
@@ -95,6 +95,7 @@ public class DeviceMenu implements IMenu {
             System.out.println("Please enter the expected lifespan in years of the device (optional):");
             Integer expectedLifespanYears = InputHandler.getIntegerInputNullable();
 
+            boolean addResult = false;
             switch (deviceType) {
                 case COMPUTE:
                     System.out.println("Please enter the compute role (HYPERVISOR, NAS, GENERAL_SERVER):");
@@ -106,9 +107,14 @@ public class DeviceMenu implements IMenu {
                     System.out.println("Please enter the storage in TB");
                     int storage = InputHandler.getIntegerInput();
 
-                    //deviceService.addComputeDevice();
+                    addResult = deviceService.addComputeDevice(rack, startUnit, deviceHeight, deviceType, name, manufacturer, model, serial, powerWatts, status, purchaseDate, warrantyExpiryDate,
+                            firmwareVersion, lastFirmwareUpdate, licenseName, licenseExpiry, notes, tags, scheduledMaintenanceTypeInput, scheduledMaintenanceType, maintenanceIntervalDays,
+                            lastScheduledMaintenanceDate, purchasePriceInput, purchasePrice, expectedLifespanYears, computeRole, cpuCores, ram, storage);
             }
 
+            if(addResult) {
+                System.out.println("Device successfully added!");
+            }
         }
 
     }

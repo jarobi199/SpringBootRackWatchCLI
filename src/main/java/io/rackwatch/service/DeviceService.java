@@ -4,8 +4,10 @@ import io.github.kusoroadeolu.clique.Clique;
 import io.github.kusoroadeolu.clique.components.Table;
 import io.github.kusoroadeolu.clique.configuration.TableType;
 import io.rackwatch.authentication.SessionContext;
+import io.rackwatch.enums.ComputeRole;
 import io.rackwatch.enums.DeviceStatus;
 import io.rackwatch.enums.DeviceType;
+import io.rackwatch.enums.MaintenanceType;
 import io.rackwatch.model.Device;
 import io.rackwatch.model.Rack;
 import io.rackwatch.repository.DeviceRepository;
@@ -13,6 +15,8 @@ import io.rackwatch.repository.RackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -90,4 +94,74 @@ public class DeviceService {
         return valid;
 
     }
+
+    public boolean addComputeDevice(Rack rack,
+                                 int startUnit,
+                                 int deviceHeight,
+                                 DeviceType deviceType,
+                                 String name,
+                                 String manufacturer,
+                                 String model,
+                                 String serial,
+                                 int powerWatts,
+                                 DeviceStatus status,
+                                 LocalDate purchaseDate,
+                                 LocalDate warrantyExpiryDate,
+                                 String firmwareVersion,
+                                 LocalDate lastFirmwareUpdate,
+                                 String licenseName,
+                                 LocalDate licenseExpiry,
+                                 String notes,
+                                 String tags,
+                                 String scheduledMaintenanceTypeInput,
+                                 MaintenanceType scheduledMaintenanceType,
+                                 Integer maintenanceIntervalDays,
+                                 LocalDate lastScheduledMaintenanceDate,
+                                 String purchasePriceInput,
+                                 BigDecimal purchasePrice,
+                                 Integer expectedLifespanYears,
+                                 ComputeRole computeRole,
+                                 int cpuCores,
+                                 int ram,
+                                 int storage
+    )
+    {
+        boolean result = true;
+
+        //Validation
+        if(deviceHeight < 1) {
+            System.out.println("The device height must be greater than zero.");
+            result = false;
+        }
+        else if(powerWatts < 1) {
+            System.out.println("The power watts must be greater than zero.");
+            result = false;
+        }
+        else if(purchaseDate.isAfter(LocalDate.now())) {
+            System.out.println("The purchase date cannot be in the future.");
+            result = false;
+        }
+        else if(!checkUniqueDeviceName(name)) {
+            System.out.println("The device name must be unique.");
+            result = false;
+        }
+        else if((serial != null) && !checkUniqueSerialNumber(serial)) {
+            System.out.println("The serial number must be unique.");
+            result = false;
+        }
+
+        return result;
+    }
+
+    private boolean checkUniqueDeviceName(String name) {
+        List<String> deviceNames = deviceRepository.findByUserId(SessionContext.getUser().getId()).stream().map(Device::getName).toList();
+        return !deviceNames.contains(name);
+    }
+
+    private boolean checkUniqueSerialNumber(String serialNumber) {
+        List<String> serialNumbers = deviceRepository.findByUserId(SessionContext.getUser().getId()).stream().map(Device::getSerialNumber).toList();
+        return !serialNumbers.contains(serialNumber);
+    }
+
+
 }
