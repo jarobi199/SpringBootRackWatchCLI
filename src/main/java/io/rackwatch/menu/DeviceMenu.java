@@ -2,6 +2,7 @@ package io.rackwatch.menu;
 
 import io.rackwatch.enums.*;
 import io.rackwatch.interfaces.IMenu;
+import io.rackwatch.model.Device;
 import io.rackwatch.model.Rack;
 import io.rackwatch.service.DeviceService;
 import io.rackwatch.util.InputHandler;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 public class DeviceMenu implements IMenu {
@@ -27,10 +29,33 @@ public class DeviceMenu implements IMenu {
             choice = InputHandler.getIntegerInput();
             switch (choice) {
                 case 1 -> listFilterDevices();
+                case 2 -> searchDevices();
                 case 3 -> addDevice();
+                case 7 -> decommissionDevice();
+                case 8 -> deleteDevice();
             }
         }
         while (choice != 0);
+    }
+
+    public void decommissionDevice() {
+        Device device = listAllDevicesByStatusAndSelect(DeviceStatus.ACTIVE);
+        if (device != null) {
+            deviceService.decommissionDevice(device);
+            System.out.println("Device decommissioned successfully!");
+        }
+    }
+
+    public void deleteDevice() {
+        Device device = listAllDevicesByStatusAndSelect(null);
+        if (device != null) {
+            System.out.println("Are you sure you want to delete this device? (Y/N):");
+            boolean confirmation = InputHandler.getBooleanInput();
+            if (confirmation) {
+                deviceService.deleteDevice(device);
+                System.out.println("Device deleted successfully!");
+            }
+        }
     }
 
     public void addDevice() {
@@ -137,6 +162,21 @@ public class DeviceMenu implements IMenu {
         }
     }
 
+    public void searchDevices() {
+        String value = null;
+        System.out.println("Please select what you would like to search by:");
+        System.out.println("[1] Name");
+        System.out.println("[2] Tag");
+        System.out.println("[3] Model");
+        System.out.println("[4] Serial Number");
+        System.out.println("[0] Back");
+        int choice = InputHandler.getIntegerInput();
+        System.out.println("Please enter your search value:");
+        String search =  InputHandler.getStringInput();
+
+        deviceService.searchDevice(choice, search);
+    }
+
     public void listFilterDevices() {
         if(deviceService.areDevicesAvailable()) {
             String value = null;
@@ -180,7 +220,7 @@ public class DeviceMenu implements IMenu {
 
     public void printOptions() {
         System.out.println();
-        System.out.println("[1] List / filter devices");
+        System.out.println("[1] List/filter devices");
         System.out.println("[2] Search devices");
         System.out.println("[3] Add device");
         System.out.println("[4] View device detail");
@@ -192,6 +232,29 @@ public class DeviceMenu implements IMenu {
         System.out.println("Please make a selection:");
     }
 
+    public Device listAllDevicesByStatusAndSelect(DeviceStatus deviceStatus) {
+        int number = 1;
+        Device device = null;
+        int choice;
+
+        List<Device> devices = deviceService.getAllDevicesByStatus(deviceStatus);
+
+        if(!devices.isEmpty()) {
+            for (Device d : devices) {
+                System.out.println("[" + number + "] " + d.getName());
+                number++;
+            }
+            System.out.println("Select a device:");
+            choice = InputHandler.getIntegerInput();
+            device = devices.get(choice - 1);
+        }
+        else
+        {
+            System.out.println("There are no devices available.");
+        }
+
+        return device;
+    }
 }
 
 

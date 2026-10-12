@@ -14,8 +14,8 @@ public class InputHandler {
     // the command line. Flip back to false for normal operation.
     // ----------------------------------------------------------------
     private static final boolean DEBUG = false;
-    private static final String DEBUG_FILE = "C:\\Users\\jarob\\Documents\\Java\\Claude\\SpringBootRackWatchCLI\\data\\test_input.txt";
-    private static final int DEBUG_DELAY_MS = 2000;
+    private static final String DEBUG_FILE = "C:\\Users\\jarob\\Documents\\Java\\Claude\\SpringBootRackWatchCLI\\data\\testing_racks_add_device.txt";
+    private static final int DEBUG_DELAY_MS = 1000;
 
     private static final Scanner consoleScanner = new Scanner(System.in);
     private static BufferedReader debugReader = null;
@@ -77,7 +77,8 @@ public class InputHandler {
     // ----------------------------------------------------------------
 
     public static String getStringInputNullable() {
-        return (nextLine().isEmpty()) ? null : nextLine();
+        String line = nextLine();
+        return line.isEmpty() ? null : line;
     }
 
     public static String getStringInput() {

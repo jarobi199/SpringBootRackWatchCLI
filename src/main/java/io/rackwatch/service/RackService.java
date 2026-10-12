@@ -4,6 +4,7 @@ import io.github.kusoroadeolu.clique.Clique;
 import io.github.kusoroadeolu.clique.components.Table;
 import io.github.kusoroadeolu.clique.configuration.TableType;
 import io.rackwatch.authentication.SessionContext;
+import io.rackwatch.enums.DeviceStatus;
 import io.rackwatch.model.Device;
 import io.rackwatch.model.Rack;
 import io.rackwatch.repository.DeviceRepository;
@@ -72,7 +73,7 @@ public class RackService {
     }
 
     public void viewRackElevation(Rack rack) {
-        List<Device> devices = deviceRepository.findByRackId(rack.getId());
+        List<Device> devices = deviceRepository.findByRackId(rack.getId()).stream().filter(device -> DeviceStatus.ACTIVE.equals(device.getStatus())).toList();
         RackDiagramUtil.render(devices);
     }
 

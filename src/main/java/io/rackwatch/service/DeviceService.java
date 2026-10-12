@@ -190,4 +190,46 @@ public class DeviceService {
                 .allMatch(tag -> (!tag.isEmpty()) && (tag.length() <= 20));
     }
 
+    public void searchDevice(int choice, String search) {
+        List<Device> devices = deviceRepository.findByUserId(SessionContext.getUser().getId());
+        List<Device> filteredDevices = switch (choice) {
+            case 1 -> devices.stream()
+                    .filter(d -> d.getName().equalsIgnoreCase(search))
+                    .toList();
+            case 2 -> devices.stream()
+                    .filter(d -> d.getTags().stream().anyMatch(tag -> tag.equals(search)))
+                    .toList();
+            case 3 -> devices.stream()
+                    .filter(d -> d.getModel().equalsIgnoreCase(search))
+                    .toList();
+            case 4 -> devices.stream()
+                    .filter(d -> d.getSerialNumber().equalsIgnoreCase(search))
+                    .toList();
+            default -> devices;
+        };
+
+        displayDevices(filteredDevices);
+    }
+
+    public List<Device> getAllDevicesByStatus(DeviceStatus deviceStatus) {
+        List<Device> devices = null;
+        if(deviceStatus != null) {
+            devices = deviceRepository.findByUserIdAndStatus(SessionContext.getUser().getId(), deviceStatus);
+        }
+        else
+        {
+            devices = deviceRepository.findByUserId(SessionContext.getUser().getId());
+        }
+
+        return devices;
+    }
+
+    public void deleteDevice(Device device) {
+        deviceRepository.delete(device);
+    }
+
+    public void decommissionDevice(Device device) {
+        device.setStatus(DeviceStatus.DECOMMISSIONED);
+        deviceRepository.save(device);
+    }
 }
