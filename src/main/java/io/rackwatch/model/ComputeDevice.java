@@ -7,6 +7,7 @@ import io.rackwatch.enums.MaintenanceType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public class ComputeDevice extends Device {
 
@@ -21,10 +22,10 @@ public class ComputeDevice extends Device {
 
     public ComputeDevice(String userId, String rackId, String name, String manufacturer, String model, String serialNumber, Integer startUnit, Integer unitHeight, Integer powerWatts,
                          DeviceStatus status, LocalDate purchaseDate, LocalDate warrantExpiry, String firmwareVersion, LocalDate lastFirmwareUpdate, Integer firmwareIntervalOverrideDays,
-                         String licenseName, LocalDate licenseExpiry, String notes, MaintenanceType scheduledMaintenanceType, Integer maintenanceIntervalDays, LocalDate lastScheduledMaintenanceDate,
+                         String licenseName, LocalDate licenseExpiry, String notes, List<String> tags, MaintenanceType scheduledMaintenanceType, Integer maintenanceIntervalDays, LocalDate lastScheduledMaintenanceDate,
                          BigDecimal purchasePrice, Integer expectedLifespanYears, ComputeRole computeRole, int cpuCores, int ramGb, int storageTb) {
         super(userId, rackId, name, manufacturer, model, serialNumber, startUnit, unitHeight, powerWatts, status, purchaseDate, warrantExpiry, firmwareVersion, lastFirmwareUpdate,
-                firmwareIntervalOverrideDays, licenseName, licenseExpiry, notes, scheduledMaintenanceType, maintenanceIntervalDays,
+                firmwareIntervalOverrideDays, licenseName, licenseExpiry, notes, tags, scheduledMaintenanceType, maintenanceIntervalDays,
                 lastScheduledMaintenanceDate, purchasePrice, expectedLifespanYears);
         this.computeRole = computeRole;
         this.cpuCores = cpuCores;

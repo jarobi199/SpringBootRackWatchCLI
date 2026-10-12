@@ -7,6 +7,7 @@ import io.rackwatch.enums.NetworkRole;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public class NetworkDevice extends Device {
     private NetworkRole networkRole;
@@ -18,12 +19,12 @@ public class NetworkDevice extends Device {
 
     }
 
-    public NetworkDevice(String userId, String rackId, String name, String manufacturer, String model, String serialNumber, Integer startUnit, Integer unitHeight, Integer powerWatts, DeviceStatus status,
-                         LocalDate purchaseDate, LocalDate warrantExpiry, String firmwareVersion, LocalDate lastFirmwareUpdate, Integer firmwareIntervalOverrideDays, String licenseName,
-                         LocalDate licenseExpiry, String notes, MaintenanceType scheduledMaintenanceType, Integer maintenanceIntervalDays, LocalDate lastScheduledMaintenanceDate,
+    public NetworkDevice(String userId, String rackId, String name, String manufacturer, String model, String serialNumber, Integer startUnit, Integer unitHeight, Integer powerWatts,
+                         DeviceStatus status, LocalDate purchaseDate, LocalDate warrantExpiry, String firmwareVersion, LocalDate lastFirmwareUpdate, Integer firmwareIntervalOverrideDays,
+                         String licenseName, LocalDate licenseExpiry, String notes, List<String> tags, MaintenanceType scheduledMaintenanceType, Integer maintenanceIntervalDays, LocalDate lastScheduledMaintenanceDate,
                          BigDecimal purchasePrice, Integer expectedLifespanYears, NetworkRole networkRole, int portCount, int maxSpeedGbps, boolean isManaged) {
         super(userId, rackId, name, manufacturer, model, serialNumber, startUnit, unitHeight, powerWatts, status, purchaseDate, warrantExpiry, firmwareVersion, lastFirmwareUpdate,
-                firmwareIntervalOverrideDays, licenseName, licenseExpiry, notes, scheduledMaintenanceType, maintenanceIntervalDays,
+                firmwareIntervalOverrideDays, licenseName, licenseExpiry, notes, tags, scheduledMaintenanceType, maintenanceIntervalDays,
                 lastScheduledMaintenanceDate, purchasePrice, expectedLifespanYears);
         this.networkRole = networkRole;
         this.portCount = portCount;

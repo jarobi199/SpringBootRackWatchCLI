@@ -8,6 +8,7 @@ import io.rackwatch.enums.ComputeRole;
 import io.rackwatch.enums.DeviceStatus;
 import io.rackwatch.enums.DeviceType;
 import io.rackwatch.enums.MaintenanceType;
+import io.rackwatch.model.ComputeDevice;
 import io.rackwatch.model.Device;
 import io.rackwatch.model.Rack;
 import io.rackwatch.repository.DeviceRepository;
@@ -96,34 +97,31 @@ public class DeviceService {
     }
 
     public boolean addComputeDevice(Rack rack,
-                                 int startUnit,
-                                 int deviceHeight,
-                                 DeviceType deviceType,
-                                 String name,
-                                 String manufacturer,
-                                 String model,
-                                 String serial,
-                                 int powerWatts,
-                                 DeviceStatus status,
-                                 LocalDate purchaseDate,
-                                 LocalDate warrantyExpiryDate,
-                                 String firmwareVersion,
-                                 LocalDate lastFirmwareUpdate,
-                                 String licenseName,
-                                 LocalDate licenseExpiry,
-                                 String notes,
-                                 String tags,
-                                 String scheduledMaintenanceTypeInput,
-                                 MaintenanceType scheduledMaintenanceType,
-                                 Integer maintenanceIntervalDays,
-                                 LocalDate lastScheduledMaintenanceDate,
-                                 String purchasePriceInput,
-                                 BigDecimal purchasePrice,
-                                 Integer expectedLifespanYears,
-                                 ComputeRole computeRole,
-                                 int cpuCores,
-                                 int ram,
-                                 int storage
+                                    String name,
+                                    String manufacturer,
+                                    String model,
+                                    String serial,
+                                    int startUnit,
+                                    int deviceHeight,
+                                    int powerWatts,
+                                    DeviceStatus status,
+                                    LocalDate purchaseDate,
+                                    LocalDate warrantyExpiryDate,
+                                    String firmwareVersion,
+                                    LocalDate lastFirmwareUpdate,
+                                    String licenseName,
+                                    LocalDate licenseExpiry,
+                                    String notes,
+                                    String tags,
+                                    MaintenanceType scheduledMaintenanceType,
+                                    Integer maintenanceIntervalDays,
+                                    LocalDate lastScheduledMaintenanceDate,
+                                    BigDecimal purchasePrice,
+                                    Integer expectedLifespanYears,
+                                    ComputeRole computeRole,
+                                    int cpuCores,
+                                    int ram,
+                                    int storage
     )
     {
         boolean result = true;
@@ -133,21 +131,40 @@ public class DeviceService {
             System.out.println("The device height must be greater than zero.");
             result = false;
         }
-        else if(powerWatts < 1) {
+        if(powerWatts < 1) {
             System.out.println("The power watts must be greater than zero.");
             result = false;
         }
-        else if(purchaseDate.isAfter(LocalDate.now())) {
+        if(purchaseDate.isAfter(LocalDate.now())) {
             System.out.println("The purchase date cannot be in the future.");
             result = false;
         }
-        else if(!checkUniqueDeviceName(name)) {
+        if(!checkUniqueDeviceName(name)) {
             System.out.println("The device name must be unique.");
             result = false;
         }
-        else if((serial != null) && !checkUniqueSerialNumber(serial)) {
+        if((serial != null) && !checkUniqueSerialNumber(serial)) {
             System.out.println("The serial number must be unique.");
             result = false;
+        }
+        if(!checkTags(tags)) {
+            System.out.println("A device can have a maximum of 10 tags.");
+            result = false;
+        }
+        if((expectedLifespanYears != null) &&((expectedLifespanYears < 1) || (expectedLifespanYears > 30))) {
+            System.out.println("The expected lifespan years must be between 1 and 30.");
+            result = false;
+        }
+
+        if(result) {
+            List<String> tagList = null;
+            if(tags != null) {
+                tagList = List.of(tags.split(","));
+            }
+
+            ComputeDevice computeDevice = new ComputeDevice(SessionContext.getUser().getId(), rack.getId(), name, manufacturer, model, serial, startUnit, deviceHeight, powerWatts,
+                    status, purchaseDate, warrantyExpiryDate, firmwareVersion, lastFirmwareUpdate, null, licenseName, licenseExpiry, notes, tagList,
+                    scheduledMaintenanceType, maintenanceIntervalDays, lastScheduledMaintenanceDate, purchasePrice, expectedLifespanYears, computeRole, cpuCores, ram, storage);
         }
 
         return result;
@@ -163,5 +180,11 @@ public class DeviceService {
         return !serialNumbers.contains(serialNumber);
     }
 
+    private boolean checkTags(String tags) {
+        List<String> tagList = List.of(tags.split(","));
+        return (tagList.size() < 10) && tagList.stream()
+                .map(String::trim)
+                .allMatch(tag -> (!tag.isEmpty()) && (tag.length() <= 20));
+    }
 
 }

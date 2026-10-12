@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "devices")
@@ -49,7 +48,7 @@ public abstract class Device {
     public Device(String userId, String rackId, String name, String manufacturer, String model, String serialNumber, Integer startUnit,
                   Integer unitHeight, Integer powerWatts, DeviceStatus status, LocalDate purchaseDate, LocalDate warrantExpiry,
                   String firmwareVersion, LocalDate lastFirmwareUpdate, Integer firmwareIntervalOverrideDays, String licenseName,
-                  LocalDate licenseExpiry, String notes, MaintenanceType scheduledMaintenanceType, Integer maintenanceIntervalDays,
+                  LocalDate licenseExpiry, String notes, List<String> tags, MaintenanceType scheduledMaintenanceType, Integer maintenanceIntervalDays,
                   LocalDate lastScheduledMaintenanceDate, BigDecimal purchasePrice, Integer expectedLifespanYears) {
         this.userId = userId;
         this.rackId = rackId;
@@ -69,12 +68,12 @@ public abstract class Device {
         this.licenseName = licenseName;
         this.licenseExpiry = licenseExpiry;
         this.notes = notes;
+        this.tags = tags;
         this.scheduledMaintenanceType = scheduledMaintenanceType;
         this.maintenanceIntervalDays = maintenanceIntervalDays;
         this.lastScheduledMaintenanceDate = lastScheduledMaintenanceDate;
         this.purchasePrice = purchasePrice;
         this.expectedLifespanYears = expectedLifespanYears;
-        this.tags = new ArrayList<>();
     }
 
     public String getId() {

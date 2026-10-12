@@ -107,16 +107,15 @@ public class DeviceMenu implements IMenu {
                     System.out.println("Please enter the storage in TB");
                     int storage = InputHandler.getIntegerInput();
 
-                    addResult = deviceService.addComputeDevice(rack, startUnit, deviceHeight, deviceType, name, manufacturer, model, serial, powerWatts, status, purchaseDate, warrantyExpiryDate,
-                            firmwareVersion, lastFirmwareUpdate, licenseName, licenseExpiry, notes, tags, scheduledMaintenanceTypeInput, scheduledMaintenanceType, maintenanceIntervalDays,
-                            lastScheduledMaintenanceDate, purchasePriceInput, purchasePrice, expectedLifespanYears, computeRole, cpuCores, ram, storage);
+                    addResult = deviceService.addComputeDevice(rack, name, manufacturer, model, serial, startUnit, deviceHeight, powerWatts, status, purchaseDate, warrantyExpiryDate,
+                            firmwareVersion, lastFirmwareUpdate, licenseName, licenseExpiry, notes, tags, scheduledMaintenanceType, maintenanceIntervalDays,
+                            lastScheduledMaintenanceDate, purchasePrice, expectedLifespanYears, computeRole, cpuCores, ram, storage);
             }
 
             if(addResult) {
                 System.out.println("Device successfully added!");
             }
         }
-
     }
 
     public void listFilterDevices() {
