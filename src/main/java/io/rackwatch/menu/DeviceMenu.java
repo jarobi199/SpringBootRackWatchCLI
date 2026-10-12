@@ -1,9 +1,6 @@
 package io.rackwatch.menu;
 
-import io.rackwatch.enums.ComputeRole;
-import io.rackwatch.enums.DeviceStatus;
-import io.rackwatch.enums.DeviceType;
-import io.rackwatch.enums.MaintenanceType;
+import io.rackwatch.enums.*;
 import io.rackwatch.interfaces.IMenu;
 import io.rackwatch.model.Rack;
 import io.rackwatch.service.DeviceService;
@@ -95,25 +92,35 @@ public class DeviceMenu implements IMenu {
             System.out.println("Please enter the expected lifespan in years of the device (optional):");
             Integer expectedLifespanYears = InputHandler.getIntegerInputNullable();
 
-            boolean addResult = false;
             switch (deviceType) {
-                case COMPUTE:
+                case COMPUTE -> {
                     System.out.println("Please enter the compute role (HYPERVISOR, NAS, GENERAL_SERVER):");
                     ComputeRole computeRole = ComputeRole.valueOf(InputHandler.getStringInput().toUpperCase());
-                    System.out.println("Please enter the number of CPU cores");
+                    System.out.println("Please enter the number of CPU cores:");
                     int cpuCores = InputHandler.getIntegerInput();
-                    System.out.println("Please enter the RAM in GB");
+                    System.out.println("Please enter the RAM in GB:");
                     int ram = InputHandler.getIntegerInput();
-                    System.out.println("Please enter the storage in TB");
+                    System.out.println("Please enter the storage in TB:");
                     int storage = InputHandler.getIntegerInput();
 
-                    addResult = deviceService.addComputeDevice(rack, name, manufacturer, model, serial, startUnit, deviceHeight, powerWatts, status, purchaseDate, warrantyExpiryDate,
+                    deviceService.addComputeDevice(rack, name, manufacturer, model, serial, startUnit, deviceHeight, powerWatts, status, purchaseDate, warrantyExpiryDate,
                             firmwareVersion, lastFirmwareUpdate, licenseName, licenseExpiry, notes, tags, scheduledMaintenanceType, maintenanceIntervalDays,
                             lastScheduledMaintenanceDate, purchasePrice, expectedLifespanYears, computeRole, cpuCores, ram, storage);
-            }
+                }
+                 case NETWORK -> {
+                     System.out.println("Please enter the network role (SWITCH, ROUTER, FIREWALL, ACCESS_POINT):");
+                     NetworkRole networkRole = NetworkRole.valueOf(InputHandler.getStringInput().toUpperCase());
+                     System.out.println("Please enter the port count:");
+                     int portCount = InputHandler.getIntegerInput();
+                     System.out.println("Please enter the max speed in Gbps:");
+                     int maxSpeed = InputHandler.getIntegerInput();
+                     System.out.println("Is this device managed? (Y/N):");
+                     boolean isManaged = InputHandler.getBooleanInput();
 
-            if(addResult) {
-                System.out.println("Device successfully added!");
+                     deviceService.addNetworkDevice(rack, name, manufacturer, model, serial, startUnit, deviceHeight, powerWatts, status, purchaseDate, warrantyExpiryDate,
+                             firmwareVersion, lastFirmwareUpdate, licenseName, licenseExpiry, notes, tags, scheduledMaintenanceType, maintenanceIntervalDays,
+                             lastScheduledMaintenanceDate, purchasePrice, expectedLifespanYears, networkRole, portCount, maxSpeed, isManaged);
+                 }
             }
         }
     }
