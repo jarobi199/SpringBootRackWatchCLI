@@ -31,11 +31,23 @@ public class DeviceMenu implements IMenu {
                 case 1 -> listFilterDevices();
                 case 2 -> searchDevices();
                 case 3 -> addDevice();
+                case 6 -> moveDevice();
                 case 7 -> decommissionDevice();
                 case 8 -> deleteDevice();
             }
         }
         while (choice != 0);
+    }
+
+    public void moveDevice() {
+        Device device = listAllDevicesByStatusAndSelect(DeviceStatus.ACTIVE);
+        Rack rack = rackMenu.listAllRacksAndSelect();
+        System.out.println("Enter the start unit where you would like to place the device:");
+        int startUnit = InputHandler.getIntegerInput();
+
+        if ((device != null) && (rack != null)) {
+            deviceService.moveDevice(device, rack, startUnit);
+        }
     }
 
     public void decommissionDevice() {

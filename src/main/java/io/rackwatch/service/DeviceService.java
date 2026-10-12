@@ -232,4 +232,13 @@ public class DeviceService {
         device.setStatus(DeviceStatus.DECOMMISSIONED);
         deviceRepository.save(device);
     }
+
+    public void moveDevice(Device device, Rack rack, int startUnit) {
+        if(validatePlacement(startUnit, device.getUnitHeight(), rack)) {
+            device.setRackId(rack.getId());
+            device.setStartUnit(startUnit);
+            deviceRepository.save(device);
+            System.out.println("Device moved successfully!");
+        }
+    }
 }

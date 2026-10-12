@@ -10,7 +10,7 @@ import java.util.List;
 
 public class RackDiagramUtil {
 
-    public static void render(List<Device> devices) {
+    public static void render(List<Device> devices, Rack rack) {
         String unitDisplay = null;
         String rackDisplay = null;
 
@@ -21,7 +21,7 @@ public class RackDiagramUtil {
                         "[*blue, bold]RACK[/]"
                 );
 
-        for(int unitCount = Rack.MAX_RACK_SIZE; unitCount >= 1; unitCount--) {
+        for(int unitCount = rack.getTotalUnits(); unitCount >= 1; unitCount--) {
             unitDisplay = String.valueOf(unitCount);
             rackDisplay = "FREE";
 

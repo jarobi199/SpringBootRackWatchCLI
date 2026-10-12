@@ -74,7 +74,7 @@ public class RackService {
 
     public void viewRackElevation(Rack rack) {
         List<Device> devices = deviceRepository.findByRackId(rack.getId()).stream().filter(device -> DeviceStatus.ACTIVE.equals(device.getStatus())).toList();
-        RackDiagramUtil.render(devices);
+        RackDiagramUtil.render(devices, rack);
     }
 
     private boolean validateRack(Rack rack) {
