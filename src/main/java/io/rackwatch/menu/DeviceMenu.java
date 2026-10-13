@@ -31,12 +31,20 @@ public class DeviceMenu implements IMenu {
                 case 1 -> listFilterDevices();
                 case 2 -> searchDevices();
                 case 3 -> addDevice();
+                case 4 -> viewDeviceDetail();
                 case 6 -> moveDevice();
                 case 7 -> decommissionDevice();
                 case 8 -> deleteDevice();
             }
         }
         while (choice != 0);
+    }
+
+    public void viewDeviceDetail() {
+        Device device = listAllDevicesByStatusAndSelect(null);
+        if(device != null) {
+            deviceService.viewDeviceDetails(device);
+        }
     }
 
     public void moveDevice() {

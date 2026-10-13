@@ -241,4 +241,9 @@ public class DeviceService {
             System.out.println("Device moved successfully!");
         }
     }
+
+    public void viewDeviceDetails(Device device) {
+        System.out.println("| DEVICE DETAILS |");
+        System.out.println(device.getDetails());
+    }
 }

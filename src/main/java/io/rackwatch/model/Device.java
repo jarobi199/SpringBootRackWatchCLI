@@ -298,6 +298,39 @@ public abstract class Device {
         return nextMaintenanceDate;
     }
 
+    public String getDetails() {
+        return
+                "Device Type: " + getDeviceType() + "\n" +
+                "ID: " + id + "\n" +
+                "User ID: " + userId + "\n" +
+                "Rack ID: " + rackId + "\n" +
+                "Name: " + name + "\n" +
+                "Manufacturer: " + manufacturer + "\n" +
+                "Model: " + model + "\n" +
+                "Serial Number: " + (serialNumber != null ? serialNumber : "N/A") + "\n" +
+                "Start Unit: " + startUnit + "\n" +
+                "Unit Height: " + unitHeight + "\n" +
+                "Power (Watts): " + powerWatts + "\n" +
+                "Status: " + status + "\n" +
+                "Purchase Date: " + purchaseDate + "\n" +
+                "Warranty Expiry: " + (warrantExpiry != null ? warrantExpiry : "N/A") + "\n" +
+                "Firmware Version: " + firmwareVersion + "\n" +
+                "Last Firmware Update: " + (lastFirmwareUpdate != null ? lastFirmwareUpdate : "N/A") + "\n" +
+                "Firmware Interval Override (Days): " + (firmwareIntervalOverrideDays != null ? firmwareIntervalOverrideDays : "N/A") + "\n" +
+                "License Name: " + (licenseName != null ? licenseName : "N/A") + "\n" +
+                "License Expiry: " + (licenseExpiry != null ? licenseExpiry : "N/A") + "\n" +
+                "Notes: " + notes + "\n" +
+                "Tags: " + (tags != null && !tags.isEmpty() ? String.join(", ", tags) : "None") + "\n" +
+                "Scheduled Maintenance Type: " + (scheduledMaintenanceType != null ? scheduledMaintenanceType : "N/A") + "\n" +
+                "Maintenance Interval (Days): " + (maintenanceIntervalDays != null ? maintenanceIntervalDays : "N/A") + "\n" +
+                "Last Scheduled Maintenance Date: " + (lastScheduledMaintenanceDate != null ? lastScheduledMaintenanceDate : "N/A") + "\n" +
+                "Maintenance Due Date: " + (getMaintenanceDuetDate() != null ? getMaintenanceDuetDate()  : "N/A") + "\n" +
+                "Purchase Price: " + (purchasePrice != null ? "$" + purchasePrice : "N/A") + "\n" +
+                "Expected Lifespan (Years): " + (expectedLifespanYears != null ? expectedLifespanYears : "N/A") + "\n" +
+                "End Of Life Date: " + (getEndOfLifeDate() != null ? getEndOfLifeDate() : "N/A") + "\n" +
+                "Book Value: " + (getBookValue() != null ? "$" + getBookValue() : "N/A") + "\n";
+    }
+
     public abstract DeviceType getDeviceType();
 
     public abstract int getFirmwareIntervalDays();
