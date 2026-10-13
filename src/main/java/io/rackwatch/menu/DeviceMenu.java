@@ -206,7 +206,6 @@ public class DeviceMenu implements IMenu {
             System.out.println("[3] Type");
             System.out.println("[4] Tag");
             System.out.println("[5] Status");
-            System.out.println("[0] Back");
             int choice = InputHandler.getIntegerInput();
 
             switch (choice) {
