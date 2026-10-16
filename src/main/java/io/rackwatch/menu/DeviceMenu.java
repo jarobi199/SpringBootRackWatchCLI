@@ -32,6 +32,7 @@ public class DeviceMenu implements IMenu {
                 case 2 -> searchDevices();
                 case 3 -> addDevice();
                 case 4 -> viewDeviceDetail();
+                case 5 -> editDevice();
                 case 6 -> moveDevice();
                 case 7 -> decommissionDevice();
                 case 8 -> deleteDevice();
@@ -39,6 +40,36 @@ public class DeviceMenu implements IMenu {
         }
         while (choice != 0);
     }
+
+    public void editDevice() {
+        Device device = listAllDevicesByStatusAndSelect(null);
+        if(device != null) {
+            System.out.println("Please enter the new device name:");
+            String name = InputHandler.getStringInput();
+            System.out.println("Please enter any comma separated tags:");
+            String tags = InputHandler.getStringInputNullable();
+            System.out.println("Please enter new the notes:");
+            String notes = InputHandler.getStringInput();
+            System.out.println("Please enter new the license name of the device:");
+            String licenseName = InputHandler.getStringInputNullable();
+            System.out.println("Please enter the  firmware interval override days:");
+            Integer firmwareIntervalOverride = InputHandler.getIntegerInputNullable();
+            System.out.println("Please enter the new device power in watts:");
+            int powerWatts = InputHandler.getIntegerInput();
+            System.out.println("Please enter the new expected lifespan in years of the device (optional):");
+            Integer expectedLifespanYears = InputHandler.getIntegerInputNullable();
+            System.out.println("Please enter the new purchase price of the device (optional):");
+            String purchasePriceInput = InputHandler.getStringInputNullable();
+            BigDecimal purchasePrice = (purchasePriceInput != null) ? BigDecimal.valueOf(Long.parseLong(purchasePriceInput)) : null;
+            System.out.println("Please enter the maintenance interval days of the device (optional):");
+            Integer maintenanceIntervalDays = InputHandler.getIntegerInputNullable();
+
+            //deviceService.editDevice(device);
+        }
+    }
+
+    //Name, notes, tags, dates, license, firmware interval override, power draw, price, lifespan, and maintenance schedule are editable.
+    // Type, rack, and units are not — moving is its own action, and type is fixed at creation.
 
     public void viewDeviceDetail() {
         Device device = listAllDevicesByStatusAndSelect(null);
@@ -103,7 +134,7 @@ public class DeviceMenu implements IMenu {
             String model = InputHandler.getStringInput();
             System.out.println("Please enter the device serial number (optional):");
             String serial = InputHandler.getStringInputNullable();
-            System.out.println("Please enter the device power watts:");
+            System.out.println("Please enter the device power in watts:");
             int powerWatts = InputHandler.getIntegerInput();
             System.out.println("Please enter the status of the device (ACTIVE, DECOMMISSIONED):");
             DeviceStatus status = DeviceStatus.valueOf(InputHandler.getStringInput().toUpperCase());
