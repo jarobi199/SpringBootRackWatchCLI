@@ -246,4 +246,18 @@ public class DeviceService {
         System.out.println("| DEVICE DETAILS |");
         System.out.println(device.getDetails());
     }
+
+    public void editDevice(Device device, String tags, String notes, String licenseName, Integer firmwareIntervalOverride, int powerWatts, Integer expectedLifespanYears, BigDecimal purchasePrice, Integer maintenanceIntervalDays) {
+        List<String> tagList = (tags != null) ? List.of(tags.split(",")) : new ArrayList<>();
+
+        device.setNotes(notes);
+        device.setLicenseName(licenseName);
+        device.setFirmwareIntervalOverrideDays(firmwareIntervalOverride);
+        device.setMaintenanceIntervalDays(maintenanceIntervalDays);
+        device.setPowerWatts(powerWatts);
+        device.setExpectedLifespanYears(expectedLifespanYears);
+        device.setPurchasePrice(purchasePrice);
+        device.setTags(tagList);
+        deviceRepository.save(device);
+    }
 }

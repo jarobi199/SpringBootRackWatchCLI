@@ -64,12 +64,11 @@ public class DeviceMenu implements IMenu {
             System.out.println("Please enter the maintenance interval days of the device (optional):");
             Integer maintenanceIntervalDays = InputHandler.getIntegerInputNullable();
 
-            //deviceService.editDevice(device);
+            deviceService.editDevice(device, tags, notes, licenseName, firmwareIntervalOverride, powerWatts,
+                    expectedLifespanYears, purchasePrice, maintenanceIntervalDays);
+            System.out.println("Device has been edited successfully!");
         }
     }
-
-    //Name, notes, tags, dates, license, firmware interval override, power draw, price, lifespan, and maintenance schedule are editable.
-    // Type, rack, and units are not — moving is its own action, and type is fixed at creation.
 
     public void viewDeviceDetail() {
         Device device = listAllDevicesByStatusAndSelect(null);
