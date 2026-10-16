@@ -15,6 +15,8 @@ public class MainMenu implements IMenu {
     @Autowired
     private DeviceMenu deviceMenu;
     @Autowired
+    private MaintenanceMenu maintenanceMenu;
+    @Autowired
     private AuthenticateMenu authenticateMenu;
     @Autowired
     private SettingsMenu settingsMenu;
@@ -38,7 +40,7 @@ public class MainMenu implements IMenu {
             menu = switch (choice) {
                 case 1 -> rackMenu;
                 case 2 -> deviceMenu;
-                //case 3 -> maintenanceMenu.show();
+                case 3 -> maintenanceMenu;
                 //case 4 -> reportMenu.show();
                 //case 5 -> alertMenu.show();
                 case 6 -> settingsMenu;
