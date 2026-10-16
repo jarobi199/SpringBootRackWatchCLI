@@ -7,6 +7,7 @@ import io.rackwatch.authentication.SessionContext;
 import io.rackwatch.enums.*;
 import io.rackwatch.model.*;
 import io.rackwatch.repository.DeviceRepository;
+import io.rackwatch.repository.MaintenanceLogRepository;
 import io.rackwatch.repository.RackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ public class DeviceService {
     private DeviceRepository deviceRepository;
     @Autowired
     private RackRepository rackRepository;
+    @Autowired
+    private MaintenanceLogRepository maintenanceLogRepository;
 
     public boolean areDevicesAvailable() {
         return deviceRepository.count() > 0;
@@ -260,4 +263,28 @@ public class DeviceService {
         device.setTags(tagList);
         deviceRepository.save(device);
     }
+
+    public void updateDevice(Device device, MaintenanceType type, String firmwareVersionAfter, LocalDate newExpiryDate) {
+        switch (type) {
+            case FIRMWARE_UPDATE -> {
+                device.setLastFirmwareUpdate(LocalDate.now());
+                device.setFirmwareVersion(firmwareVersionAfter);
+            }
+            case LICENSE_RENEWAL -> {
+                device.setLicenseExpiry(newExpiryDate);
+            }
+            case WARRANTY_EXTENSION -> {
+                device.setWarrantExpiry(newExpiryDate);
+            }
+        }
+
+        LocalDate lastScheduledMaintenanceDate = null;
+        MaintenanceLog maintenanceLog = maintenanceLogRepository.findByUserIdOrderByPerformedDateDesc(SessionContext.getUser().getId()).stream().filter(m -> m.getType().equals(type)).findFirst().orElse(null);
+        if (maintenanceLog != null) {
+            lastScheduledMaintenanceDate = maintenanceLog.getPerformedDate();
+            device.setLastScheduledMaintenanceDate(lastScheduledMaintenanceDate);
+        }
+        deviceRepository.save(device);
+    }
+
 }

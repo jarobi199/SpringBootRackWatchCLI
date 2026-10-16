@@ -4,6 +4,7 @@ import io.rackwatch.enums.DeviceStatus;
 import io.rackwatch.enums.MaintenanceType;
 import io.rackwatch.interfaces.IMenu;
 import io.rackwatch.model.Device;
+import io.rackwatch.service.DeviceService;
 import io.rackwatch.service.MaintenanceLogService;
 import io.rackwatch.util.InputHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class MaintenanceMenu implements IMenu {
     private MaintenanceLogService maintenanceLogService;
     @Autowired
     private DeviceMenu deviceMenu;
+    @Autowired
+    DeviceService deviceService;
 
     @Override
     public void show() {
@@ -58,6 +61,8 @@ public class MaintenanceMenu implements IMenu {
             }
 
             maintenanceLogService.addMaintenanceLog(device, notes, type, performedDate, firmwareVersionAfter, newExpiryDate);
+            deviceService.updateDevice(device, type, firmwareVersionAfter, newExpiryDate);
+
             System.out.println("The maintenance log has been successfully added!");
         }
     }
