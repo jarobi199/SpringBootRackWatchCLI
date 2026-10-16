@@ -1,12 +1,15 @@
 package io.rackwatch.menu;
 
 import io.rackwatch.enums.DeviceStatus;
+import io.rackwatch.enums.MaintenanceType;
 import io.rackwatch.interfaces.IMenu;
 import io.rackwatch.model.Device;
 import io.rackwatch.service.MaintenanceLogService;
 import io.rackwatch.util.InputHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
 
 @Component
 public class MaintenanceMenu implements IMenu {
@@ -31,8 +34,31 @@ public class MaintenanceMenu implements IMenu {
 
     public void logMaintenance() {
         Device device = deviceMenu.listAllDevicesByStatusAndSelect(DeviceStatus.ACTIVE);
+        String firmwareVersionAfter = null;
+        LocalDate newExpiryDate = null;
+
         if (device != null) {
-            //TODO: Add code here
+            System.out.println("Please enter the notes:");
+            String notes = InputHandler.getStringInput();
+            System.out.println("Enter the maintenance type ( FIRMWARE_UPDATE, HARDWARE_REPAIR, PART_REPLACEMENT, CLEANING,\n" +
+                    "    CONFIG_CHANGE, LICENSE_RENEWAL, WARRANTY_EXTENSION):");
+            MaintenanceType type = MaintenanceType.valueOf(InputHandler.getStringInput().toUpperCase());
+            System.out.println("Please enter the date that the maintenance was performed (YYYY-MM-DD):");
+            LocalDate performedDate = InputHandler.getDateInput();
+
+            switch (type) {
+                case FIRMWARE_UPDATE -> {
+                    System.out.println("Please enter the updated firmware version:");
+                    firmwareVersionAfter = InputHandler.getStringInput();
+                }
+                case LICENSE_RENEWAL, WARRANTY_EXTENSION -> {
+                    System.out.println("Please enter the new expiry date (YYYY-MM-DD):");
+                    newExpiryDate = InputHandler.getDateInput();
+                }
+            }
+
+            maintenanceLogService.addMaintenanceLog(device, notes, type, performedDate, firmwareVersionAfter, newExpiryDate);
+            System.out.println("The maintenance log has been successfully added!");
         }
     }
 
