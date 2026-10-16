@@ -30,9 +30,22 @@ public class MaintenanceMenu implements IMenu {
             choice = InputHandler.getIntegerInput();
             switch (choice) {
                 case 1 -> logMaintenance();
+                case 2 -> historyByDevice();
+                case 3 -> viewAllMaintenanceLogs();
             }
         }
         while (choice != 0);
+    }
+
+    public void historyByDevice() {
+        Device device = deviceMenu.listAllDevicesByStatusAndSelect(null);
+        if (device != null) {
+            maintenanceLogService.viewMaintenanceLogsByDevice(device);
+        }
+    }
+
+    public void viewAllMaintenanceLogs() {
+        maintenanceLogService.viewAllMaintenanceLogs();
     }
 
     public void logMaintenance() {
