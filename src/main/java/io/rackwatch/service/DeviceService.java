@@ -73,26 +73,28 @@ public class DeviceService {
         deviceTable.render();
     }
 
-    public boolean validatePlacement(int startUnit, int deviceHeight, Rack rack) {
+    public boolean validatePlacement(int startUnit, int deviceHeight, Rack rack, String excludeDeviceId) {
         boolean valid = true;
-       if ((startUnit < 1) || ((startUnit + deviceHeight - 1) > rack.getTotalUnits())) {
-           System.out.println("Invalid start unit or unit size");
-           valid = false;
+        if ((startUnit < 1) || ((startUnit + deviceHeight - 1) > rack.getTotalUnits())) {
+            System.out.println("Invalid start unit or unit size");
+            valid = false;
         }
-       else
-       {
-           List<Device> devices = deviceRepository.findByRackId(rack.getId()).stream().filter(d -> DeviceStatus.ACTIVE.equals(d.getStatus())).toList();
-           int newEnd = startUnit + deviceHeight - 1;
-           for (Device device : devices) {
-               int existingEnd = device.getStartUnit() + device.getUnitHeight() - 1;
-               if (startUnit <= existingEnd && newEnd >= device.getStartUnit()) {
-                   System.out.println("A device is already in this rack location.");
-                   valid = false;
-                   break;
-               }
-           }
-       }
-
+        else
+        {
+            List<Device> devices = deviceRepository.findByRackId(rack.getId()).stream()
+                    .filter(d -> DeviceStatus.ACTIVE.equals(d.getStatus()))
+                    .filter(d -> !d.getId().equals(excludeDeviceId))
+                    .toList();
+            int newEnd = startUnit + deviceHeight - 1;
+            for (Device device : devices) {
+                int existingEnd = device.getStartUnit() + device.getUnitHeight() - 1;
+                if (startUnit <= existingEnd && newEnd >= device.getStartUnit()) {
+                    System.out.println("A device is already in this rack location.");
+                    valid = false;
+                    break;
+                }
+            }
+        }
         return valid;
     }
 
@@ -237,7 +239,7 @@ public class DeviceService {
     }
 
     public void moveDevice(Device device, Rack rack, int startUnit) {
-        if(validatePlacement(startUnit, device.getUnitHeight(), rack)) {
+        if(validatePlacement(startUnit, device.getUnitHeight(), rack, device.getId())) {
             device.setRackId(rack.getId());
             device.setStartUnit(startUnit);
             deviceRepository.save(device);
@@ -250,9 +252,10 @@ public class DeviceService {
         System.out.println(device.getDetails());
     }
 
-    public void editDevice(Device device, String tags, String notes, String licenseName, Integer firmwareIntervalOverride, int powerWatts, Integer expectedLifespanYears, BigDecimal purchasePrice, Integer maintenanceIntervalDays) {
+    public void editDevice(Device device, String name, String tags, String notes, String licenseName, Integer firmwareIntervalOverride, int powerWatts, Integer expectedLifespanYears, BigDecimal purchasePrice, Integer maintenanceIntervalDays) {
         List<String> tagList = (tags != null) ? List.of(tags.split(",")) : new ArrayList<>();
 
+        device.setName(name);
         device.setNotes(notes);
         device.setLicenseName(licenseName);
         device.setFirmwareIntervalOverrideDays(firmwareIntervalOverride);
@@ -264,26 +267,21 @@ public class DeviceService {
         deviceRepository.save(device);
     }
 
-    public void updateDevice(Device device, MaintenanceType type, String firmwareVersionAfter, LocalDate newExpiryDate) {
+    public void updateDevice(Device device, MaintenanceType type, String firmwareVersionAfter, LocalDate newExpiryDate, LocalDate performedDate) {
         switch (type) {
             case FIRMWARE_UPDATE -> {
-                device.setLastFirmwareUpdate(LocalDate.now());
+                device.setLastFirmwareUpdate(performedDate);
                 device.setFirmwareVersion(firmwareVersionAfter);
             }
-            case LICENSE_RENEWAL -> {
-                device.setLicenseExpiry(newExpiryDate);
-            }
-            case WARRANTY_EXTENSION -> {
-                device.setWarrantExpiry(newExpiryDate);
-            }
+            case LICENSE_RENEWAL -> device.setLicenseExpiry(newExpiryDate);
+            case WARRANTY_EXTENSION -> device.setWarrantExpiry(newExpiryDate);
         }
 
-        LocalDate lastScheduledMaintenanceDate = null;
-        MaintenanceLog maintenanceLog = maintenanceLogRepository.findByUserIdOrderByPerformedDateDesc(SessionContext.getUser().getId()).stream().filter(m -> m.getType().equals(type)).findFirst().orElse(null);
-        if (maintenanceLog != null) {
-            lastScheduledMaintenanceDate = maintenanceLog.getPerformedDate();
-            device.setLastScheduledMaintenanceDate(lastScheduledMaintenanceDate);
+        // Only the device's own scheduled task resets its maintenance clock
+        if (type.equals(device.getScheduledMaintenanceType())) {
+            device.setLastScheduledMaintenanceDate(performedDate);
         }
+
         deviceRepository.save(device);
     }
 

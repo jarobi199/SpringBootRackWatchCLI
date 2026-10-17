@@ -2,6 +2,7 @@ package io.rackwatch.service;
 
 import io.github.kusoroadeolu.clique.Clique;
 import io.github.kusoroadeolu.clique.components.Table;
+import io.github.kusoroadeolu.clique.configuration.TableConfiguration;
 import io.github.kusoroadeolu.clique.configuration.TableType;
 import io.rackwatch.authentication.SessionContext;
 import io.rackwatch.enums.MaintenanceType;
@@ -48,7 +49,11 @@ public class MaintenanceLogService {
     }
 
     private void displayMaintenanceLogs(List<MaintenanceLog> maintenanceLogs) {
-        Table maintenanceLogTable = Clique.table(TableType.BOX_DRAW)
+        TableConfiguration config = TableConfiguration.builder()
+                .nullReplacement("N/A")  // Default is empty string
+                .build();
+
+        Table maintenanceLogTable = Clique.table(TableType.BOX_DRAW, config)
                 .headers(
                         "[*blue, bold]DEVICE NAME[/]",
                         "[*blue, bold]RACK NAME[/]",
@@ -60,7 +65,7 @@ public class MaintenanceLogService {
                         "[*blue, bold]NEW EXPIRY DATE[/]"
                 );
         maintenanceLogs.forEach(maintenanceLog -> maintenanceLogTable.row(maintenanceLog.getDeviceName(), maintenanceLog.getRackName(), maintenanceLog.getType().name(), maintenanceLog.getPerformedDate().toString(),
-                maintenanceLog.getNotes(), maintenanceLog.getFirmwareVersionBefore(), maintenanceLog.getFirmwareVersionAfter(), maintenanceLog.getNewExpiryDate().toString()));
+                maintenanceLog.getNotes(), maintenanceLog.getFirmwareVersionBefore(), maintenanceLog.getFirmwareVersionAfter(), (maintenanceLog.getNewExpiryDate() != null) ? maintenanceLog.getNewExpiryDate().toString() : "N/A"));
     maintenanceLogTable.render();
     }
 

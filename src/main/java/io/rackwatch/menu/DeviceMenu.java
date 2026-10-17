@@ -64,7 +64,7 @@ public class DeviceMenu implements IMenu {
             System.out.println("Please enter the maintenance interval days of the device (optional):");
             Integer maintenanceIntervalDays = InputHandler.getIntegerInputNullable();
 
-            deviceService.editDevice(device, tags, notes, licenseName, firmwareIntervalOverride, powerWatts,
+            deviceService.editDevice(device, name, tags, notes, licenseName, firmwareIntervalOverride, powerWatts,
                     expectedLifespanYears, purchasePrice, maintenanceIntervalDays);
             System.out.println("Device has been edited successfully!");
         }
@@ -121,7 +121,7 @@ public class DeviceMenu implements IMenu {
                 System.out.println("Please enter the device unit height:");
                 deviceHeight = InputHandler.getIntegerInput();
             }
-            while (!deviceService.validatePlacement(startUnit, deviceHeight, rack));
+            while (!deviceService.validatePlacement(startUnit, deviceHeight, rack, null));
 
             System.out.println("Please enter the device type (COMPUTE, NETWORK, POWER):");
             DeviceType deviceType = DeviceType.valueOf(InputHandler.getStringInput().toUpperCase());
@@ -213,7 +213,6 @@ public class DeviceMenu implements IMenu {
     }
 
     public void searchDevices() {
-        String value = null;
         System.out.println("Please select what you would like to search by:");
         System.out.println("[1] Name");
         System.out.println("[2] Tag");

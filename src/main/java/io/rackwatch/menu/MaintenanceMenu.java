@@ -88,7 +88,7 @@ public class MaintenanceMenu implements IMenu {
             }
 
             maintenanceLogService.addMaintenanceLog(device, notes, type, performedDate, firmwareVersionAfter, newExpiryDate);
-            deviceService.updateDevice(device, type, firmwareVersionAfter, newExpiryDate);
+            deviceService.updateDevice(device, type, firmwareVersionAfter, newExpiryDate, performedDate);
 
             System.out.println("The maintenance log has been successfully added!");
         }
@@ -99,8 +99,7 @@ public class MaintenanceMenu implements IMenu {
         System.out.println("[1] Log maintenance");
         System.out.println("[2] History by device");
         System.out.println("[3] View all logs");
-        System.out.println("[4] Edit rack");
-        System.out.println("[5] Delete log");
+        System.out.println("[4] Delete log");
         System.out.println("[0] Exit");
         System.out.println("Please make a selection:");
     }
