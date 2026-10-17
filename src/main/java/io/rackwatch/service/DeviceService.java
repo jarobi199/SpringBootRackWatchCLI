@@ -2,6 +2,7 @@ package io.rackwatch.service;
 
 import io.github.kusoroadeolu.clique.Clique;
 import io.github.kusoroadeolu.clique.components.Table;
+import io.github.kusoroadeolu.clique.configuration.TableConfiguration;
 import io.github.kusoroadeolu.clique.configuration.TableType;
 import io.rackwatch.authentication.SessionContext;
 import io.rackwatch.enums.*;
@@ -53,7 +54,11 @@ public class DeviceService {
 
     public void displayDevices(List<Device> devices) {
         System.out.println("| LIST OF DEVICES |");
-        Table deviceTable = Clique.table(TableType.BOX_DRAW)
+        TableConfiguration config = TableConfiguration.builder()
+                .nullReplacement("N/A")
+                .build();
+
+        Table deviceTable = Clique.table(TableType.BOX_DRAW, config)
                 .headers(
                         "[*blue, bold]NAME[/]",
                         "[*blue, bold]RACK[/]",

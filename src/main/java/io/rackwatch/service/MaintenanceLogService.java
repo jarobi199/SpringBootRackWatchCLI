@@ -50,7 +50,7 @@ public class MaintenanceLogService {
 
     private void displayMaintenanceLogs(List<MaintenanceLog> maintenanceLogs) {
         TableConfiguration config = TableConfiguration.builder()
-                .nullReplacement("N/A")  // Default is empty string
+                .nullReplacement("N/A")
                 .build();
 
         Table maintenanceLogTable = Clique.table(TableType.BOX_DRAW, config)
