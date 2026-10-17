@@ -8,7 +8,6 @@ import io.rackwatch.authentication.SessionContext;
 import io.rackwatch.enums.*;
 import io.rackwatch.model.*;
 import io.rackwatch.repository.DeviceRepository;
-import io.rackwatch.repository.MaintenanceLogRepository;
 import io.rackwatch.repository.RackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +23,6 @@ public class DeviceService {
     private DeviceRepository deviceRepository;
     @Autowired
     private RackRepository rackRepository;
-    @Autowired
-    private MaintenanceLogRepository maintenanceLogRepository;
 
     public boolean areDevicesAvailable() {
         return deviceRepository.count() > 0;
