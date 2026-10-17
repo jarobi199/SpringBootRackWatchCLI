@@ -44,6 +44,10 @@ public class MaintenanceMenu implements IMenu {
         Device device = deviceMenu.listAllDevicesByStatusAndSelect(null);
         if (device != null) {
             MaintenanceLog maintenanceLog = listAllMaintenanceLogsByDeviceAndSelect(device);
+            if(maintenanceLog != null) {
+                maintenanceLogService.deleteMaintenanceLog(maintenanceLog);
+                System.out.println("The maintenance log has been deleted successfully!");
+            }
         }
     }
 

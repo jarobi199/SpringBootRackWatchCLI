@@ -76,4 +76,8 @@ public class MaintenanceLogService {
             System.out.println("There are no maintenance logs for this device");
         }
     }
+
+    public void deleteMaintenanceLog(MaintenanceLog maintenanceLog) {
+        maintenanceLogRepository.delete(maintenanceLog);
+    }
 }
