@@ -1,0 +1,596 @@
+# ====================================================================
+# RackWatch test script: Racks, Devices, and Maintenance menus
+# Blank lines and lines starting with # are skipped by InputHandler.
+# Lines containing "# --- TEST" bump the [DEBUG - STEP #] counter.
+# Start with EMPTY racks, devices, and maintenance_logs collections.
+# Selections are by list position (insertion order), so the order of
+# adds below matters. "# EXPECT" lines describe what you should see.
+# ====================================================================
+
+# ####################################################################
+# PART 1: RACKS MENU
+# ####################################################################
+
+# --- TEST 1: Add three racks, then one invalid rack
+# Main menu: [1] Racks, Rack menu: [2] Add rack
+1
+2
+Basement Rack A
+Basement Closet
+42
+3000
+2
+Office Rack B
+Home Office
+24
+1500
+2
+Garage Rack C
+Garage
+12
+800
+# Invalid: 61 units is over the 60 unit maximum
+# EXPECT: "The rack could not be added. Check your rack variables."
+2
+Too Big Rack
+Nowhere
+61
+1000
+
+# --- TEST 2: List all racks
+# EXPECT: 3 racks (A, B, C); Too Big Rack is not listed
+1
+
+# --- TEST 3: Edit rack 3 (name, location, power; total units is not editable)
+4
+3
+Garage Rack D
+Detached Garage
+1000
+1
+# EXPECT: Garage Rack D / Detached Garage / 12 units / 1000 W
+
+# --- TEST 4: View rack elevation of the empty rack 3
+# EXPECT: units 12 down to 1, all FREE
+3
+3
+
+# --- TEST 5: Back to Main menu, then into Devices
+0
+2
+
+# ####################################################################
+# PART 2: DEVICES MENU (add, list/filter, search, detail, edit, move)
+# ####################################################################
+
+# --- TEST 6: Add COMPUTE device 1 (pve-01) to Basement Rack A, units 20-21
+3
+# select rack, start unit, height, type
+1
+20
+2
+COMPUTE
+pve-01
+Dell
+PowerEdge R640
+SN-PVE-0001
+450
+ACTIVE
+2025-02-14
+2028-02-14
+2.15.0
+2026-02-10
+Proxmox Subscription
+2027-02-14
+Primary hypervisor
+compute,prod
+CLEANING
+90
+2026-07-25
+5200
+5
+# compute role, cpu cores, ram GB, storage TB
+HYPERVISOR
+32
+256
+8
+
+# --- TEST 7: Add COMPUTE device 2 (nas-01) to Basement Rack A, units 16-17
+3
+1
+16
+2
+COMPUTE
+nas-01
+Synology
+RS1221+
+SN-NAS-0001
+180
+ACTIVE
+2025-08-03
+2028-08-03
+7.2.1
+2026-01-15
+Synology Active Backup
+2027-08-03
+Primary storage
+storage,lab-only
+CLEANING
+180
+2026-06-01
+1400
+5
+NAS
+4
+32
+48
+
+# --- TEST 8: Add NETWORK device 1 (edge-fw) to Basement Rack A, unit 18
+3
+1
+18
+1
+NETWORK
+edge-fw
+Netgate
+6100
+SN-FW-0001
+60
+ACTIVE
+2023-10-24
+2026-10-24
+23.09
+2026-08-01
+pfSense Plus
+2027-01-15
+Edge firewall
+network,prod
+CONFIG_CHANGE
+180
+2026-05-01
+650
+4
+# network role, port count, max speed Gbps, managed (Y/N)
+FIREWALL
+8
+10
+Y
+
+# --- TEST 9: Add NETWORK device 2 (core-sw) to Basement Rack A, unit 19
+3
+1
+19
+1
+NETWORK
+core-sw
+Ubiquiti
+USW-Pro-48
+SN-SW-0001
+120
+ACTIVE
+2024-06-10
+2027-06-10
+6.6.65
+2026-05-20
+UniFi Care
+2026-11-01
+Core switch
+network,prod
+CLEANING
+120
+2026-06-15
+700
+7
+SWITCH
+48
+10
+Y
+
+# --- TEST 10: Add POWER device 1 (rack-pdu-a) to Office Rack B, unit 1
+3
+2
+1
+1
+POWER
+rack-pdu-a
+APC
+AP7921B
+SN-PDU-0001
+15
+ACTIVE
+2024-01-20
+2027-01-20
+3.9.2
+2025-12-01
+APC Support Plan
+2027-01-20
+Rack PDU
+power,prod
+CLEANING
+365
+2026-01-10
+300
+10
+# power role, outlet count, capacity watts
+PDU
+8
+1800
+
+# --- TEST 11: Add POWER device 2 (rack-ups) to Office Rack B, units 2-3
+3
+2
+2
+2
+POWER
+rack-ups
+APC
+SMT1500RM2U
+SN-UPS-0001
+100
+ACTIVE
+2024-03-05
+2027-03-05
+UPS 09.8
+2025-11-20
+APC Advantage Plan
+2027-03-05
+Battery backup
+power,prod
+PART_REPLACEMENT
+365
+2025-11-20
+900
+5
+UPS
+8
+1500
+
+# --- TEST 12: Add COMPUTE device 3 (old-srv) with a placement retry
+# First attempt: rack 2, unit 2, height 2 overlaps rack-ups (units 2-3)
+# EXPECT: "A device is already in this rack location." then re-prompts
+3
+2
+2
+2
+# Retry: units 10-11 are free
+10
+2
+COMPUTE
+old-srv
+HP
+ProLiant DL360 G7
+SN-OLD-0001
+250
+ACTIVE
+2019-05-10
+2022-05-10
+1.2.0
+2023-01-01
+Windows Server 2016
+2026-12-31
+Retired lab server
+compute,lab-only
+CLEANING
+180
+2026-04-01
+800
+7
+GENERAL_SERVER
+16
+64
+4
+
+# --- TEST 13: Add a device with a duplicate name (pve-01) to rack 3
+# EXPECT: "The device name must be unique." and nothing is saved
+3
+3
+1
+1
+COMPUTE
+pve-01
+Dell
+R740
+SN-DUP-0001
+300
+ACTIVE
+2025-01-01
+2028-01-01
+1.0
+2025-06-01
+Test License
+2027-01-01
+Duplicate name test
+test
+CLEANING
+90
+2026-06-01
+100
+5
+GENERAL_SERVER
+8
+16
+1
+
+# --- TEST 14: List devices, no filter
+# EXPECT: 7 devices (pve-01, nas-01, edge-fw, core-sw, rack-pdu-a, rack-ups, old-srv)
+1
+1
+
+# --- TEST 15: Filter by type COMPUTE
+# EXPECT: pve-01, nas-01, old-srv
+1
+3
+COMPUTE
+
+# --- TEST 16: Filter by tag "prod"
+# EXPECT: pve-01, edge-fw, core-sw, rack-pdu-a, rack-ups
+1
+4
+prod
+
+# --- TEST 17: Filter by rack 2 (Office Rack B)
+# EXPECT: rack-pdu-a, rack-ups, old-srv
+1
+2
+2
+
+# --- TEST 18: Filter by status ACTIVE
+# EXPECT: all 7 devices
+1
+5
+ACTIVE
+
+# --- TEST 19: Search by name
+# Search menu: [1] Name, [2] Tag, [3] Model, [4] Serial Number
+# EXPECT: pve-01 only
+2
+1
+pve-01
+
+# --- TEST 20: Search by tag
+# EXPECT: nas-01
+2
+2
+storage
+
+# --- TEST 21: Search by model
+# EXPECT: nas-01
+2
+3
+RS1221+
+
+# --- TEST 22: Search by serial number
+# EXPECT: edge-fw
+2
+4
+SN-FW-0001
+
+# --- TEST 23: View device detail for pve-01 (device 1)
+# EXPECT: all fields, maintenance due date, end of life date, book value
+4
+1
+
+# --- TEST 24: Edit device nas-01 (device 2)
+# Prompts: name, tags, notes, license name, firmware override days,
+# power watts, lifespan years, purchase price, maintenance interval days
+5
+2
+nas-main
+storage,backup
+Primary storage - edited
+Synology Active Backup Pro
+120
+190
+6
+1500
+200
+
+# --- TEST 25: View detail of device 2 to verify the edit
+# EXPECT: tags storage, backup / notes edited / override 120 / 190 W /
+#         6 years / $1500 / interval 200
+# EXPECT (spec): name is nas-main. If it still says nas-01, editDevice
+#         is ignoring the new name.
+4
+2
+
+# --- TEST 26: Move old-srv (ACTIVE device 7) to Basement Rack A, unit 30
+# Prompts: select device, select rack, start unit
+6
+7
+1
+30
+# EXPECT: "Device moved successfully!"
+
+# --- TEST 27: Move edge-fw (ACTIVE device 3) onto pve-01's units
+# EXPECT: "A device is already in this rack location." and no move
+6
+3
+1
+20
+
+# --- TEST 28: Move pve-01 (ACTIVE device 1) up one unit in the same rack
+# New range is units 21-22; only pve-01 itself occupies 21
+# EXPECT (spec): "Device moved successfully!"
+# If it reports a conflict, validatePlacement is counting the device
+# against itself.
+6
+1
+1
+21
+
+# --- TEST 29: Back to Main, view rack elevation for Basement Rack A
+# EXPECT: old-srv at units 30-31, devices at 16-19 and pve-01 at 20-21 or 21-22
+0
+1
+3
+1
+
+# ####################################################################
+# PART 3: MAINTENANCE MENU
+# ####################################################################
+# NOTE: the menu text prints "[4] Edit rack" and "[5] Delete log" but
+# the code maps option 4 to Delete log. This script uses 4.
+
+# --- TEST 30: Back to Main, open Maintenance, log FIRMWARE_UPDATE on pve-01
+# Prompts: select ACTIVE device, notes, type, date performed,
+# then firmware version (firmware) or expiry date (license/warranty)
+0
+3
+1
+1
+Updated BIOS
+FIRMWARE_UPDATE
+2026-10-10
+2.16.0
+
+# --- TEST 31: Log CLEANING on pve-01
+1
+1
+Cleaned filters
+CLEANING
+2026-10-12
+
+# --- TEST 32: Log LICENSE_RENEWAL on core-sw (ACTIVE device 4)
+1
+4
+Renewed UniFi Care
+LICENSE_RENEWAL
+2026-10-11
+2027-11-01
+
+# --- TEST 33: Log WARRANTY_EXTENSION on edge-fw (ACTIVE device 3)
+1
+3
+Extended warranty
+WARRANTY_EXTENSION
+2026-10-11
+2029-10-24
+
+# --- TEST 34: Log PART_REPLACEMENT on rack-ups (ACTIVE device 6)
+1
+6
+Replaced battery
+PART_REPLACEMENT
+2026-10-09
+
+# --- TEST 35: Log CLEANING on old-srv (ACTIVE device 7)
+1
+7
+Pre-retirement cleaning
+CLEANING
+2026-10-01
+
+# --- TEST 36: History by device for pve-01
+# EXPECT: 2 logs (FIRMWARE_UPDATE 2.15.0 -> 2.16.0, CLEANING)
+2
+1
+
+# --- TEST 37: View all logs
+# EXPECT: 6 logs, newest performed date first
+3
+
+# --- TEST 38: History by device for rack-pdu-a (device 5, no logs)
+# EXPECT: "There are no maintenance logs for this device"
+2
+5
+
+# --- TEST 39: Delete log on a device with no logs (rack-pdu-a)
+# EXPECT: "There are no maintenance logs available."
+4
+5
+
+# --- TEST 40: Delete the CLEANING log on pve-01 (log 2 of 2)
+# EXPECT: "The maintenance log has been deleted successfully!"
+4
+1
+2
+
+# --- TEST 41: History by device for pve-01 again
+# EXPECT: 1 log (FIRMWARE_UPDATE)
+2
+1
+
+# --- TEST 42: Back to Main, open Devices, view pve-01 detail
+# EXPECT: Firmware Version 2.16.0
+# EXPECT (spec): Last Firmware Update 2026-10-10 (the date performed)
+# EXPECT (spec): Last Scheduled Maintenance Date 2026-10-12 (set by the
+#   CLEANING log, which was deleted afterward; deleting a log does not
+#   roll the device back)
+0
+2
+4
+1
+
+# --- TEST 42b: View core-sw detail (device 4)
+# EXPECT: License Expiry 2027-11-01
+# EXPECT (spec): Last Scheduled Maintenance Date stays 2026-06-15. Its
+#   scheduled task is CLEANING, and the LICENSE_RENEWAL log is not that task.
+4
+4
+
+# ####################################################################
+# PART 4: DECOMMISSION, DELETE, AND LOG SNAPSHOTS
+# ####################################################################
+
+# --- TEST 43: Decommission old-srv (ACTIVE device 7)
+7
+7
+
+# --- TEST 44: Filter by status DECOMMISSIONED
+# EXPECT: old-srv only
+1
+5
+DECOMMISSIONED
+
+# --- TEST 45: Delete old-srv but answer N to the confirmation
+# EXPECT: no "deleted" message
+8
+7
+N
+
+# --- TEST 46: Delete old-srv and confirm
+# EXPECT: "Device deleted successfully!"
+8
+7
+Y
+
+# --- TEST 47: List devices, no filter
+# EXPECT: 6 devices, old-srv gone
+1
+1
+
+# --- TEST 48: Back to Main, open Maintenance, view all logs
+# EXPECT: old-srv's cleaning log is still listed (device and rack name
+# are snapshots), with rack name Basement Rack A
+0
+3
+3
+
+# ####################################################################
+# PART 5: RACK ELEVATION AND RACK DELETION
+# ####################################################################
+
+# --- TEST 49: Back to Main, open Racks, view elevation of Basement Rack A
+# EXPECT: old-srv (decommissioned, then deleted) is not shown
+0
+1
+3
+1
+
+# --- TEST 50: Delete Basement Rack A (has devices)
+# EXPECT: "This rack has dependencies and could not be deleted."
+5
+1
+
+# --- TEST 51: Delete Garage Rack D (rack 3, empty)
+# EXPECT: rack deleted with no message
+5
+3
+
+# --- TEST 52: List all racks
+# EXPECT: Basement Rack A and Office Rack B only
+1
+
+# --- TEST 53: Exit
+0
+0

@@ -14,7 +14,7 @@ public class InputHandler {
     // the command line. Flip back to false for normal operation.
     // ----------------------------------------------------------------
     private static final boolean DEBUG = false;
-    private static final String DEBUG_FILE = "C:\\Users\\jarob\\Documents\\Java\\Claude\\SpringBootRackWatchCLI\\data\\testing_racks_add_device.txt";
+    private static final String DEBUG_FILE = "C:\\Users\\jarob\\Documents\\Java\\Claude\\SpringBootRackWatchCLI\\data\\testing_racks_devices_maintenance.txt";
     private static final int DEBUG_DELAY_MS = 1000;
 
     private static final Scanner consoleScanner = new Scanner(System.in);
