@@ -31,6 +31,10 @@ public class MaintenanceLogService {
         maintenanceLogRepository.save(maintenanceLog);
     }
 
+    public List<MaintenanceLog> getAllMaintenanceLogsByDevice(Device device) {
+        return maintenanceLogRepository.findByDeviceId(device.getId());
+    }
+
     public void viewAllMaintenanceLogs() {
         List<MaintenanceLog> maintenanceLogs =  maintenanceLogRepository.findByUserIdOrderByPerformedDateDesc(SessionContext.getUser().getId());
         if(!maintenanceLogs.isEmpty()) {

@@ -4,6 +4,7 @@ import io.rackwatch.enums.DeviceStatus;
 import io.rackwatch.enums.MaintenanceType;
 import io.rackwatch.interfaces.IMenu;
 import io.rackwatch.model.Device;
+import io.rackwatch.model.MaintenanceLog;
 import io.rackwatch.service.DeviceService;
 import io.rackwatch.service.MaintenanceLogService;
 import io.rackwatch.util.InputHandler;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 public class MaintenanceMenu implements IMenu {
@@ -32,9 +34,17 @@ public class MaintenanceMenu implements IMenu {
                 case 1 -> logMaintenance();
                 case 2 -> historyByDevice();
                 case 3 -> viewAllMaintenanceLogs();
+                case 4 -> deleteMaintenanceLog();
             }
         }
         while (choice != 0);
+    }
+
+    public void deleteMaintenanceLog() {
+        Device device = deviceMenu.listAllDevicesByStatusAndSelect(null);
+        if (device != null) {
+            MaintenanceLog maintenanceLog = listAllMaintenanceLogsByDeviceAndSelect(device);
+        }
     }
 
     public void historyByDevice() {
@@ -91,4 +101,27 @@ public class MaintenanceMenu implements IMenu {
         System.out.println("Please make a selection:");
     }
 
+    public MaintenanceLog listAllMaintenanceLogsByDeviceAndSelect(Device device) {
+        int number = 1;
+        MaintenanceLog maintenanceLog = null;
+        int choice;
+
+        List<MaintenanceLog> maintenanceLogs = maintenanceLogService.getAllMaintenanceLogsByDevice(device);
+
+        if(!maintenanceLogs.isEmpty()) {
+            for (MaintenanceLog m : maintenanceLogs) {
+                System.out.println("[" + number + "] " + m.getNotes()  + " - " + m.getPerformedDate() + " (" + m.getType() + ")");
+                number++;
+            }
+            System.out.println("Select a maintenance log:");
+            choice = InputHandler.getIntegerInput();
+            maintenanceLog = maintenanceLogs.get(choice - 1);
+        }
+        else
+        {
+            System.out.println("There are no maintenance logs available.");
+        }
+
+        return maintenanceLog;
+    }
 }
