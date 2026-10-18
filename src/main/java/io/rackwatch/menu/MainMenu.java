@@ -31,6 +31,8 @@ public class MainMenu implements IMenu {
     @Autowired
     private SettingsMenu settingsMenu;
     @Autowired
+    private ReportsMenu reportsMenu;
+    @Autowired
     private GoodbyeMenu goodbyeMenu;
 
     @Override
@@ -51,7 +53,7 @@ public class MainMenu implements IMenu {
                 case 1 -> rackMenu;
                 case 2 -> deviceMenu;
                 case 3 -> maintenanceMenu;
-                //case 4 -> reportMenu
+                case 4 -> reportsMenu;
                 case 5 -> alertMenu;
                 case 6 -> settingsMenu;
                 case 0 -> goodbyeMenu;
