@@ -26,14 +26,16 @@ public class MaintenanceDueStrategy implements AlertStrategy {
                 LocalDate basis = d.getLastScheduledMaintenanceDate() != null
                         ? d.getLastScheduledMaintenanceDate() : d.getPurchaseDate();
                 long daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), basis.plusDays(interval));
-                if (daysLeft > Math.min(lead, interval / 2)) continue;
-                long elapsed = ChronoUnit.DAYS.between(basis, LocalDate.now());
-                AlertSeverity sev = elapsed > interval * 2L ? AlertSeverity.CRITICAL : AlertSeverity.WARNING;
-                String task = d.getScheduledMaintenanceType().name();
-                String msg = daysLeft < 0
-                        ? task + " overdue by " + (-daysLeft) + " days"
-                        : task + " due in " + daysLeft + " days";
-                results.add(new AlertResult(d.getName(), AlertType.MAINTENANCE_DUE, sev, msg));
+                if (daysLeft < Math.min(lead, interval / 2)) {
+                    long elapsed = ChronoUnit.DAYS.between(basis, LocalDate.now());
+                    AlertSeverity sev = elapsed > interval * 2L ? AlertSeverity.CRITICAL : AlertSeverity.WARNING;
+                    String task = d.getScheduledMaintenanceType().name();
+                    String msg = daysLeft < 0
+                            ? task + " overdue by " + (-daysLeft) + " days"
+                            : task + " due in " + daysLeft + " days";
+                    results.add(new AlertResult(d.getName(), AlertType.MAINTENANCE_DUE, sev, msg));
+
+                }
             }
         }
         return results;
