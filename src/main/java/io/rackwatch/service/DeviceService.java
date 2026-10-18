@@ -276,7 +276,7 @@ public class DeviceService {
                 device.setFirmwareVersion(firmwareVersionAfter);
             }
             case LICENSE_RENEWAL -> device.setLicenseExpiry(newExpiryDate);
-            case WARRANTY_EXTENSION -> device.setWarrantExpiry(newExpiryDate);
+            case WARRANTY_EXTENSION -> device.setWarrantyExpiry(newExpiryDate);
         }
 
         // Only the device's own scheduled task resets its maintenance clock

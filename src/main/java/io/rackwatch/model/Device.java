@@ -27,7 +27,7 @@ public abstract class Device {
     protected Integer powerWatts;
     protected DeviceStatus status;
     protected LocalDate purchaseDate;
-    protected LocalDate warrantExpiry;
+    protected LocalDate warrantyExpiry;
     protected String firmwareVersion;
     protected LocalDate lastFirmwareUpdate;
     protected Integer firmwareIntervalOverrideDays;
@@ -46,7 +46,7 @@ public abstract class Device {
     }
 
     public Device(String userId, String rackId, String name, String manufacturer, String model, String serialNumber, Integer startUnit,
-                  Integer unitHeight, Integer powerWatts, DeviceStatus status, LocalDate purchaseDate, LocalDate warrantExpiry,
+                  Integer unitHeight, Integer powerWatts, DeviceStatus status, LocalDate purchaseDate, LocalDate warrantyExpiry,
                   String firmwareVersion, LocalDate lastFirmwareUpdate, Integer firmwareIntervalOverrideDays, String licenseName,
                   LocalDate licenseExpiry, String notes, List<String> tags, MaintenanceType scheduledMaintenanceType, Integer maintenanceIntervalDays,
                   LocalDate lastScheduledMaintenanceDate, BigDecimal purchasePrice, Integer expectedLifespanYears) {
@@ -61,7 +61,7 @@ public abstract class Device {
         this.powerWatts = powerWatts;
         this.status = status;
         this.purchaseDate = purchaseDate;
-        this.warrantExpiry = warrantExpiry;
+        this.warrantyExpiry = warrantyExpiry;
         this.firmwareVersion = firmwareVersion;
         this.lastFirmwareUpdate = lastFirmwareUpdate;
         this.firmwareIntervalOverrideDays = firmwareIntervalOverrideDays;
@@ -172,12 +172,12 @@ public abstract class Device {
         this.purchaseDate = purchaseDate;
     }
 
-    public LocalDate getWarrantExpiry() {
-        return warrantExpiry;
+    public LocalDate getWarrantyExpiry() {
+        return warrantyExpiry;
     }
 
-    public void setWarrantExpiry(LocalDate warrantExpiry) {
-        this.warrantExpiry = warrantExpiry;
+    public void setWarrantyExpiry(LocalDate warrantyExpiry) {
+        this.warrantyExpiry = warrantyExpiry;
     }
 
     public String getFirmwareVersion() {
@@ -313,7 +313,7 @@ public abstract class Device {
                 "Power (Watts): " + powerWatts + "\n" +
                 "Status: " + status + "\n" +
                 "Purchase Date: " + purchaseDate + "\n" +
-                "Warranty Expiry: " + (warrantExpiry != null ? warrantExpiry : "N/A") + "\n" +
+                "Warranty Expiry: " + (warrantyExpiry != null ? warrantyExpiry : "N/A") + "\n" +
                 "Firmware Version: " + firmwareVersion + "\n" +
                 "Last Firmware Update: " + (lastFirmwareUpdate != null ? lastFirmwareUpdate : "N/A") + "\n" +
                 "Firmware Interval Override (Days): " + (firmwareIntervalOverrideDays != null ? firmwareIntervalOverrideDays : "N/A") + "\n" +
