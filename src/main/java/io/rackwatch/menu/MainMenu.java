@@ -84,7 +84,7 @@ public class MainMenu implements IMenu {
                 deviceService.getAllDevicesByStatus(DeviceStatus.ACTIVE));
         long critical = alerts.stream().filter(a -> a.severity() == AlertSeverity.CRITICAL).count();
         if (!alerts.isEmpty()) {
-            System.out.println(AlertManager.ANSI_RED +  "NOTE: THERE ARE " + critical + " CRITICAL ALERT(S)! See option #5 on the Alerts menu." + AlertManager.ANSI_RESET  + "\n");
+            System.out.println(AlertManager.ANSI_RED +  "NOTE: THERE ARE " + critical + " CRITICAL ALERT(S)! View alerts via option #5 on the Main menu." + AlertManager.ANSI_RESET  + "\n");
         }
     }
 
