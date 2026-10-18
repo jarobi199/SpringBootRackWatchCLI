@@ -56,7 +56,7 @@ public class AlertsMenu implements IMenu {
     public void printOptions() {
         System.out.println();
         System.out.println("[1] View all alerts");
-        System.out.println("[1] Filter by alert type");
+        System.out.println("[2] Filter by alert type");
         System.out.println("Please make a selection:");
     }
 

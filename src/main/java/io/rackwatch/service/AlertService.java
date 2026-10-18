@@ -45,7 +45,7 @@ public class AlertService {
                             "[*blue, bold]MESSAGE[/]"
                     );
             for (AlertResult alertResult : alertResults) {
-                table.row(alertResult.subject(), alertResult.alertType().name(),  alertResult.severity().name(), alertResult.message());
+                table.row(alertResult.subject(), alertResult.alertType().getDisplayName(),  alertResult.severity().name(), alertResult.message());
             }
             table.render();
         }
