@@ -4,6 +4,9 @@ import io.rackwatch.enums.DeviceStatus;
 import io.rackwatch.enums.DeviceType;
 import io.rackwatch.enums.MaintenanceType;
 import io.rackwatch.enums.NetworkRole;
+import io.rackwatch.firmware.NetworkFirmwareStrategy;
+import io.rackwatch.interfaces.FirmwareIntervalStrategy;
+import org.springframework.data.annotation.Transient;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,9 +17,11 @@ public class NetworkDevice extends Device {
     private int portCount;
     private int maxSpeedGbps;
     private boolean isManaged;
+    @Transient
+    private FirmwareIntervalStrategy<NetworkDevice> firmwareIntervalStrategy;
 
     public NetworkDevice() {
-
+        this.firmwareIntervalStrategy = new NetworkFirmwareStrategy();
     }
 
     public NetworkDevice(String userId, String rackId, String name, String manufacturer, String model, String serialNumber, Integer startUnit, Integer unitHeight, Integer powerWatts,
@@ -71,6 +76,6 @@ public class NetworkDevice extends Device {
 
     @Override
     public int getFirmwareIntervalDays() {
-        return 0;
+        return firmwareIntervalStrategy.intervalDays(this);
     }
 }

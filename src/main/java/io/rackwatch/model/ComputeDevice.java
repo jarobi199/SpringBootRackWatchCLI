@@ -4,6 +4,9 @@ import io.rackwatch.enums.ComputeRole;
 import io.rackwatch.enums.DeviceStatus;
 import io.rackwatch.enums.DeviceType;
 import io.rackwatch.enums.MaintenanceType;
+import io.rackwatch.firmware.ServerFirmwareStrategy;
+import io.rackwatch.interfaces.FirmwareIntervalStrategy;
+import org.springframework.data.annotation.Transient;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,9 +18,11 @@ public class ComputeDevice extends Device {
     private int cpuCores;
     private int ramGb;
     private int storageTb;
+    @Transient
+    private FirmwareIntervalStrategy<ComputeDevice> firmwareIntervalStrategy;
 
     public ComputeDevice() {
-
+        this.firmwareIntervalStrategy = new ServerFirmwareStrategy();
     }
 
     public ComputeDevice(String userId, String rackId, String name, String manufacturer, String model, String serialNumber, Integer startUnit, Integer unitHeight, Integer powerWatts,
@@ -72,6 +77,6 @@ public class ComputeDevice extends Device {
 
     @Override
     public int getFirmwareIntervalDays() {
-        return 0;
+        return firmwareIntervalStrategy.intervalDays(this);
     }
 }

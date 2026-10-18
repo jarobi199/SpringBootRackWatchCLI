@@ -4,6 +4,9 @@ import io.rackwatch.enums.DeviceStatus;
 import io.rackwatch.enums.DeviceType;
 import io.rackwatch.enums.MaintenanceType;
 import io.rackwatch.enums.PowerRole;
+import io.rackwatch.firmware.PowerFirmwareStrategy;
+import io.rackwatch.interfaces.FirmwareIntervalStrategy;
+import org.springframework.data.annotation.Transient;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,9 +16,11 @@ public class PowerDevice extends Device {
     private PowerRole powerRole;
     private int outletCount;
     private int capacityWatts;
+   @Transient
+    private FirmwareIntervalStrategy<PowerDevice> firmwareIntervalStrategy;
 
     public PowerDevice() {
-
+        this.firmwareIntervalStrategy = new PowerFirmwareStrategy();
     }
     public PowerDevice(String userId, String rackId, String name, String manufacturer, String model, String serialNumber, Integer startUnit, Integer unitHeight, Integer powerWatts,
                        DeviceStatus status, LocalDate purchaseDate, LocalDate warrantExpiry, String firmwareVersion, LocalDate lastFirmwareUpdate, Integer firmwareIntervalOverrideDays,
@@ -60,6 +65,6 @@ public class PowerDevice extends Device {
 
     @Override
     public int getFirmwareIntervalDays() {
-        return 0;
+        return firmwareIntervalStrategy.intervalDays(this);
     }
 }
