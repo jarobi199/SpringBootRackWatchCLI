@@ -317,6 +317,7 @@ public abstract class Device {
                 "Firmware Version: " + firmwareVersion + "\n" +
                 "Last Firmware Update: " + (lastFirmwareUpdate != null ? lastFirmwareUpdate : "N/A") + "\n" +
                 "Firmware Interval Override (Days): " + (firmwareIntervalOverrideDays != null ? firmwareIntervalOverrideDays : "N/A") + "\n" +
+                "Firmware Interval Days: " + getFirmwareIntervalDays() + "\n" +
                 "License Name: " + (licenseName != null ? licenseName : "N/A") + "\n" +
                 "License Expiry: " + (licenseExpiry != null ? licenseExpiry : "N/A") + "\n" +
                 "Notes: " + notes + "\n" +
@@ -324,7 +325,7 @@ public abstract class Device {
                 "Scheduled Maintenance Type: " + (scheduledMaintenanceType != null ? scheduledMaintenanceType : "N/A") + "\n" +
                 "Maintenance Interval (Days): " + (maintenanceIntervalDays != null ? maintenanceIntervalDays : "N/A") + "\n" +
                 "Last Scheduled Maintenance Date: " + (lastScheduledMaintenanceDate != null ? lastScheduledMaintenanceDate : "N/A") + "\n" +
-                "Maintenance Due Date: " + (getMaintenanceDuetDate() != null ? getMaintenanceDuetDate()  : "N/A") + "\n" +
+                "Maintenance Due Date: " + (getMaintenanceDuetDate() != null ? getMaintenanceDuetDate() : "N/A") + "\n" +
                 "Purchase Price: " + (purchasePrice != null ? "$" + purchasePrice : "N/A") + "\n" +
                 "Expected Lifespan (Years): " + (expectedLifespanYears != null ? expectedLifespanYears : "N/A") + "\n" +
                 "End Of Life Date: " + (getEndOfLifeDate() != null ? getEndOfLifeDate() : "N/A") + "\n" +
@@ -333,6 +334,8 @@ public abstract class Device {
 
     public abstract DeviceType getDeviceType();
 
-    public abstract int getFirmwareIntervalDays();
+    public int getFirmwareIntervalDays() {
+        return firmwareIntervalOverrideDays != null ? firmwareIntervalOverrideDays : this.getFirmwareIntervalDays();
+    }
 }
 
