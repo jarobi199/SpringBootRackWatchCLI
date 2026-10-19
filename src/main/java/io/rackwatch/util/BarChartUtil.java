@@ -85,12 +85,16 @@ public class BarChartUtil {
     }
 
     public void printBar(String label, double value, double maxValue, int labelWidth, String suffix) {
+        printBar(label, value, maxValue,  labelWidth, suffix, false);
+    }
+
+    public void printBar(String label, double value, double maxValue, int labelWidth, String suffix, boolean displayValue) {
         int filled = (int) Math.round((value / maxValue) * maxWidth);
         int empty = maxWidth - filled;
         String bar = "█".repeat(filled) + "░".repeat(empty);
         String formattedLabel = String.format("%-" + labelWidth + "s", label);
         String formattedValue = String.format(valueFormat, value);
-        String line = formattedLabel + "  " + bar + "  " + formattedValue;
+        String line = formattedLabel + "  " + bar + (displayValue ? " " + formattedValue : "");
         if (suffix != null && !suffix.isBlank()) {
             line += "  (" + suffix + ")";
         }
@@ -165,6 +169,13 @@ public class BarChartUtil {
         public void render() {
             build().render();
         }
+
+        public void printRatioBar(String label, double value, double maxValue) {
+            build().printBar(label, value, maxValue, 20, value + "/" + maxValue);
+        }
     }
 
+    public static void main(String[] args) {
+        BarChartUtil.builder().valueFormat("%.1f").printRatioBar("Ratio", 3.0, 10.0);
+    }
 }
