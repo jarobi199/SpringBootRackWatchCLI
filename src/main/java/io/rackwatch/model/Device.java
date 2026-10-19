@@ -276,6 +276,10 @@ public abstract class Device {
         this.expectedLifespanYears = expectedLifespanYears;
     }
 
+    public boolean isExpired(LocalDate date) {
+        return date.isBefore(LocalDate.now());
+    }
+
     public LocalDate getEndOfLifeDate() {
         return expectedLifespanYears == null ? null : purchaseDate.plusYears(expectedLifespanYears);
     }

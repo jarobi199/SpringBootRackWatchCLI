@@ -20,9 +20,14 @@ public class ReportsMenu implements IMenu {
             choice = InputHandler.getIntegerInput();
             switch (choice) {
                 case 1 -> rackUtilization();
+                case 2 -> upcomingExpirations();
             }
         }
         while (choice != 0);
+    }
+
+    public void upcomingExpirations() {
+        reportService.generateUpcomingExpirations();
     }
 
     public void rackUtilization() {
