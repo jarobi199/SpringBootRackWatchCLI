@@ -277,7 +277,7 @@ public abstract class Device {
     }
 
     public boolean isExpired(LocalDate date) {
-        return date.isBefore(LocalDate.now());
+            return date.isBefore(LocalDate.now());
     }
 
     public LocalDate getEndOfLifeDate() {
