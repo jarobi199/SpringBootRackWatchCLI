@@ -14,9 +14,12 @@ import io.rackwatch.model.RackSummary;
 import io.rackwatch.repository.DeviceRepository;
 import io.rackwatch.repository.RackRepository;
 import io.rackwatch.util.BarChartUtil;
+import io.rackwatch.util.InputHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -133,6 +136,43 @@ public class ReportService {
             }
         });
 
+        for (Map.Entry<String, List<Device>> entry : devicesMap.entrySet()) {
+            Rack rack = rackRepository.findById(entry.getKey()).orElse(null);
+            if (rack != null) {
+                System.out.println("| COST AND DEPRECIATION  |");
+                System.out.println("RACK NAME: " + rack.getName());
+                Table costAndDepreciationTable = Clique.table(TableType.BOX_DRAW)
+                        .headers(
+                                "[*blue, bold]PRICE[/]",
+                                "[*blue, bold]AGE[/]",
+                                "[*blue, bold]END OF LIFE DATE[/]",
+                                "[*blue, bold]BOOK VALUE[/]",
+                                "[*blue, bold]PERCENT DEPRECIATED[/]"
+                        );
+                entry.getValue().forEach(device -> {
+                    String age = String.valueOf(ChronoUnit.YEARS.between(device.getPurchaseDate(), LocalDate.now()));
+                    String endOfLifeDate = LocalDate.now().plusYears(device.getExpectedLifespanYears()).toString();
+                    String bookValue = "$" + device.getBookValue();
+                    String percentDepreciated = device.getPurchasePrice().subtract(device.getBookValue()).divide(device.getPurchasePrice(), 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)) + "%";
+                    costAndDepreciationTable.row(InputHandler.formatAsMoney(device.getPurchasePrice().doubleValue()), age, endOfLifeDate, bookValue, percentDepreciated);
+                });
+                costAndDepreciationTable.render();
+                System.out.println();
+            }
+        }
+
+        if (!notTracked.isEmpty()) {
+            System.out.println("| NOT TRACKED |");
+            Table notTrackedTable = Clique.table(TableType.BOX_DRAW)
+                    .headers(
+                            "[*blue, bold]DEVICE NAME[/]",
+                            "[*blue, bold]DEVICE TYPE[/]"
+                    );
+            notTracked.forEach(device -> {
+                notTrackedTable.row(device.getName(), device.getDeviceType().name());
+            });
+            notTrackedTable.render();
+        }
 
     }
 
