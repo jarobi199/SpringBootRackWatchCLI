@@ -22,9 +22,14 @@ public class ReportsMenu implements IMenu {
                 case 1 -> rackUtilization();
                 case 2 -> upcomingExpirations();
                 case 3 -> firmwareStatus();
+                case 5 -> costAndDepreciation();
             }
         }
         while (choice != 0);
+    }
+
+    public void costAndDepreciation() {
+        reportService.costAndDepreciation();
     }
 
     public void firmwareStatus() {
