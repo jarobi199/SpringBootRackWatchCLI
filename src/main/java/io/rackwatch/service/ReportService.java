@@ -157,6 +157,8 @@ public class ReportService {
                     costAndDepreciationTable.row(InputHandler.formatAsMoney(device.getPurchasePrice().doubleValue()), age, endOfLifeDate, bookValue, percentDepreciated);
                 });
                 costAndDepreciationTable.render();
+                BigDecimal subtotal = entry.getValue().stream().map(Device::getPurchasePrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+                System.out.println("SUBTOTAL: $" + subtotal);
                 System.out.println();
             }
         }
