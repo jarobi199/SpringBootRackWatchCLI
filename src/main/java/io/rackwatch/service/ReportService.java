@@ -91,4 +91,23 @@ public class ReportService {
 
         upcomingExpirationsTable.render();
     }
+
+    public void firmwareStatus() {
+        List<Device> devices = deviceRepository.findByUserIdAndStatus(SessionContext.getUser().getId(), DeviceStatus.ACTIVE);
+
+        Table firmwareStatusTable = Clique.table(TableType.BOX_DRAW)
+                .headers(
+                        "[*blue, bold]DEVICE NAME[/]",
+                        "[*blue, bold]DEVICE TYPE[/]",
+                        "[*blue, bold]CURRENT FIRMWARE VERSION[/]",
+                        "[*blue, bold]FIRMWARE LAST UPDATED[/]",
+                        "[*blue, bold]FIRMWARE INTERVAL DAYS[/]",
+                        "[*blue, bold]DAYS UNTIL DUE/OVERDUE[/]"
+                );
+
+        devices.forEach(device -> {
+            firmwareStatusTable.row(device.getName(), device.getDeviceType().name(), device.getFirmwareVersion(), device.getLastFirmwareUpdate().toString(), String.valueOf(device.getFirmwareIntervalDays()), "");
+        });
+        firmwareStatusTable.render();
+    }
 }

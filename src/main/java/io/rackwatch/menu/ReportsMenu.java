@@ -21,9 +21,14 @@ public class ReportsMenu implements IMenu {
             switch (choice) {
                 case 1 -> rackUtilization();
                 case 2 -> upcomingExpirations();
+                case 3 -> firmwareStatus();
             }
         }
         while (choice != 0);
+    }
+
+    public void firmwareStatus() {
+        reportService.firmwareStatus();
     }
 
     public void upcomingExpirations() {
