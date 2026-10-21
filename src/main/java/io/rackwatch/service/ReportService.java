@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -106,7 +107,11 @@ public class ReportService {
                 );
 
         devices.forEach(device -> {
-            firmwareStatusTable.row(device.getName(), device.getDeviceType().name(), device.getFirmwareVersion(), device.getLastFirmwareUpdate().toString(), String.valueOf(device.getFirmwareIntervalDays()), "");
+            LocalDate lastUpdate = (device.getLastFirmwareUpdate() != null) ? device.getLastFirmwareUpdate() : device.getPurchaseDate();
+            long daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), lastUpdate.plusDays(device.getFirmwareIntervalDays()));
+            String daysLeftDisplay = (daysLeft <  0) ? "[*red, bold]" + Math.abs(daysLeft) + "[/]" : String.valueOf(daysLeft);
+            firmwareStatusTable.row(device.getName(), device.getDeviceType().name(), device.getFirmwareVersion(), device.getLastFirmwareUpdate().toString(),
+                    String.valueOf(device.getFirmwareIntervalDays()), daysLeftDisplay);
         });
         firmwareStatusTable.render();
     }
