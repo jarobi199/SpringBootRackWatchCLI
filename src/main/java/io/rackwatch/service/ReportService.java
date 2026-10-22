@@ -185,7 +185,4 @@ public class ReportService {
 
     }
 
-    //	Active devices that have a purchase price: price, age, end-of-life date, book value, and percent depreciated,
-    //	grouped by rack with a subtotal per rack and a grand total. Devices lacking a price or lifespan
-    //	are listed beneath as "not tracked". Read-only.
 }
