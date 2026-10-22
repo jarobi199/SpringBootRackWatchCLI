@@ -119,6 +119,8 @@ public class ReportService {
     public void costAndDepreciation() {
         List<Device> devices = deviceRepository.findByUserIdAndStatus(SessionContext.getUser().getId(), DeviceStatus.ACTIVE);
         List<Device> notTracked = new ArrayList<>();
+        BigDecimal grandTotal = BigDecimal.ZERO;
+
         Map<String, List<Device>> devicesMap = new HashMap<>();
         devices.forEach(device -> {
             if((device.getPurchasePrice() != null) || (device.getExpectedLifespanYears() != null)) {
@@ -158,10 +160,15 @@ public class ReportService {
                 });
                 costAndDepreciationTable.render();
                 BigDecimal subtotal = entry.getValue().stream().map(Device::getPurchasePrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+                grandTotal = grandTotal.add(subtotal);
                 System.out.println("SUBTOTAL: $" + subtotal);
                 System.out.println();
             }
         }
+
+        System.out.println("------------------");
+        System.out.println("GRAND TOTAL: $" + grandTotal);
+        System.out.println("------------------");
 
         if (!notTracked.isEmpty()) {
             System.out.println("| NOT TRACKED |");
