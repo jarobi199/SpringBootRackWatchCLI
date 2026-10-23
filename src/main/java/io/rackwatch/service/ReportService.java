@@ -7,11 +7,10 @@ import io.github.kusoroadeolu.clique.configuration.TableType;
 import io.rackwatch.authentication.SessionContext;
 import io.rackwatch.enums.AlertType;
 import io.rackwatch.enums.DeviceStatus;
-import io.rackwatch.model.Device;
-import io.rackwatch.model.ExpirationSummary;
-import io.rackwatch.model.Rack;
-import io.rackwatch.model.RackSummary;
+import io.rackwatch.enums.MaintenanceType;
+import io.rackwatch.model.*;
 import io.rackwatch.repository.DeviceRepository;
+import io.rackwatch.repository.MaintenanceLogRepository;
 import io.rackwatch.repository.RackRepository;
 import io.rackwatch.util.BarChartUtil;
 import io.rackwatch.util.InputHandler;
@@ -31,6 +30,8 @@ public class ReportService {
     private RackRepository rackRepository;
     @Autowired
     private DeviceRepository deviceRepository;
+    @Autowired
+    private MaintenanceLogRepository maintenanceLogRepository;
 
     public void generateRackUtilization() {
         List<Rack> racks = rackRepository.findByUserId(SessionContext.getUser().getId());
@@ -185,4 +186,28 @@ public class ReportService {
 
     }
 
+    public void maintenanceSummary(Device device) {
+        List<Device> devices = null;
+        List<MaintenanceSummary> maintenanceSummaryList = new ArrayList<>();
+        Map<MaintenanceType, Integer> logsByType = new HashMap<>();
+
+        if(device != null) {
+            devices = List.of(device);
+        }
+        else
+        {
+            devices = deviceRepository.findByUserIdAndStatus(SessionContext.getUser().getId(), DeviceStatus.ACTIVE);
+        }
+
+        for (Device d : devices) {
+            List<MaintenanceLog> maintenanceLogs = maintenanceLogRepository.findByDeviceId(d.getId()).stream().sorted(Comparator.comparing(MaintenanceLog::getPerformedDate).reversed()).toList();
+            int totalMaintenanceLogs = maintenanceLogs.size();
+            LocalDate lastMaintenanceDate = (!maintenanceLogs.isEmpty()) ? maintenanceLogs.getFirst().getPerformedDate() : null;
+            for(MaintenanceType maintenanceType : MaintenanceType.values()) {
+                long count = maintenanceLogs.stream().filter(m -> m.getType().equals(maintenanceType)).count();
+                logsByType.put(maintenanceType, Math.toIntExact(count));
+            }
+        }
+
+    }
 }

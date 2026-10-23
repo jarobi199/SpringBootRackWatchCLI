@@ -1,6 +1,8 @@
 package io.rackwatch.menu;
 
+import io.rackwatch.enums.DeviceStatus;
 import io.rackwatch.interfaces.IMenu;
+import io.rackwatch.model.Device;
 import io.rackwatch.service.ReportService;
 import io.rackwatch.util.InputHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ public class ReportsMenu implements IMenu {
 
     @Autowired
     private ReportService reportService;
+    @Autowired
+    private DeviceMenu deviceMenu;
 
     @Override
     public void show() {
@@ -22,10 +26,28 @@ public class ReportsMenu implements IMenu {
                 case 1 -> rackUtilization();
                 case 2 -> upcomingExpirations();
                 case 3 -> firmwareStatus();
+                case 4 -> maintenanceSummary();
                 case 5 -> costAndDepreciation();
             }
         }
         while (choice != 0);
+    }
+
+    public void maintenanceSummary() {
+        System.out.println("Please select one device or all devices:");
+        System.out.println("[1] All devices");
+        System.out.println("[2] Select device:");
+
+        if (InputHandler.getIntegerInput() == 1) {
+            reportService.maintenanceSummary(null);
+        }
+        else
+        {
+            Device device = deviceMenu.listAllDevicesByStatusAndSelect(DeviceStatus.ACTIVE);
+            if (device != null) {
+                reportService.maintenanceSummary(device);
+            }
+        }
     }
 
     public void costAndDepreciation() {
