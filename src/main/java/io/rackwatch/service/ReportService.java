@@ -189,7 +189,6 @@ public class ReportService {
     public void maintenanceSummary(Device device) {
         List<Device> devices = null;
         List<MaintenanceSummary> maintenanceSummaryList = new ArrayList<>();
-        Map<MaintenanceType, Integer> logsByType = new HashMap<>();
 
         if(device != null) {
             devices = List.of(device);
@@ -200,6 +199,7 @@ public class ReportService {
         }
 
         for (Device d : devices) {
+            Map<MaintenanceType, Integer> logsByType = new HashMap<>();
             List<MaintenanceLog> maintenanceLogs = maintenanceLogRepository.findByDeviceId(d.getId()).stream().sorted(Comparator.comparing(MaintenanceLog::getPerformedDate).reversed()).toList();
             int totalMaintenanceLogs = maintenanceLogs.size();
             LocalDate lastMaintenanceDate = (!maintenanceLogs.isEmpty()) ? maintenanceLogs.getFirst().getPerformedDate() : null;
@@ -207,15 +207,19 @@ public class ReportService {
                 long count = maintenanceLogs.stream().filter(m -> m.getType().equals(maintenanceType)).count();
                 logsByType.put(maintenanceType, Math.toIntExact(count));
             }
-
             maintenanceSummaryList.add(new MaintenanceSummary(d.getName(), totalMaintenanceLogs, logsByType, lastMaintenanceDate));
         }
 
-        for(MaintenanceSummary maintenanceSummary : maintenanceSummaryList) {
+        for (MaintenanceSummary maintenanceSummary : maintenanceSummaryList) {
+            BarChartUtil.Builder barChartBuilder = BarChartUtil.builder();
+            barChartBuilder.title("Count Per Maintenance Type");
             System.out.println("| MAINTENANCE SUMMARY - " + maintenanceSummary.deviceName() + "|");
             System.out.println("Total logs: " + maintenanceSummary.totalLogs());
             System.out.println("Most recent maintenance date: " + maintenanceSummary.lastMaintenanceDate());
-            //TODO: Add Barchart Util code here
+            maintenanceSummary.logsByType().forEach((key, value) -> {
+                barChartBuilder.bar(key.name(), value, value + " maintenance logs");
+            });
+            barChartBuilder.render();
             System.out.println("-------");
         }
     }
