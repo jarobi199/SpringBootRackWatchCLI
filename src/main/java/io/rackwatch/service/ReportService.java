@@ -207,7 +207,16 @@ public class ReportService {
                 long count = maintenanceLogs.stream().filter(m -> m.getType().equals(maintenanceType)).count();
                 logsByType.put(maintenanceType, Math.toIntExact(count));
             }
+
+            maintenanceSummaryList.add(new MaintenanceSummary(d.getName(), totalMaintenanceLogs, logsByType, lastMaintenanceDate));
         }
 
+        for(MaintenanceSummary maintenanceSummary : maintenanceSummaryList) {
+            System.out.println("| MAINTENANCE SUMMARY - " + maintenanceSummary.deviceName() + "|");
+            System.out.println("Total logs: " + maintenanceSummary.totalLogs());
+            System.out.println("Most recent maintenance date: " + maintenanceSummary.lastMaintenanceDate());
+            //TODO: Add Barchart Util code here
+            System.out.println("-------");
+        }
     }
 }
